@@ -34,3 +34,15 @@ para su celula. También podrá controlar la asistencia de los integrantes de su
 de acuerdo a este calendario.
 - Las minutas subidas por cada coordinador de celula necesitarán aprobación del profesor, por lo que este 
 tendrá una sección para aprobar las minutas.
+
+----------------------------------------------------------------------------------
+
+Links de interes:
+
+- Carpeta personal de dropbox con contenido sobre C#, Jquery, ASP.Net, LINQ, etc
+  https://www.dropbox.com/sh/0dhg5tk897aqlrb/AACRkwcy_45ijSbVme1SE-Xua?dl=0
+  (Recomiendo descargar PRO ASP.Net MVC 5, Learning JQuery y LINQ In Action)
+
+- Sitio oficial de ASP.NET
+  http://asp.net/
+  (Recomiendo leer las secciones de ASP.NET MVC y Entity Framework) 
