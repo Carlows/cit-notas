@@ -46,3 +46,7 @@ Links de interes:
 - Sitio oficial de ASP.NET
   http://asp.net/
   (Recomiendo leer las secciones de ASP.NET MVC y Entity Framework) 
+
+- Sitio de preguntas y respuestas sobre cualquier tema de programación
+  http://stackoverflow.com/
+  (Leer el FAQ para principiantes antes de hacer cualquier pregunta, por lo general ya otra persona ha tenido el mismo problema,   asi que antes de abrir una pregunta, busca muy bien dentro de la página.)
