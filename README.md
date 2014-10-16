@@ -13,7 +13,7 @@ Patron de diseño MVC
 
 MODELO - Almacenamiento de los datos, operaciones que hagamos hacia la base de datos
 
-VISTAS - Html, javascript, css
+VISTAS - Html, Jquery, CSS
 
 CONTROLADORES - Darle un formato a los datos de nuestro modelo para que los consuman las vistas
 
