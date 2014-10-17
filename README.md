@@ -3,11 +3,11 @@
 
 ###Lenguaje y Tecnologías que utilizará la aplicación
 
-**ASP.NET MVC 5** 		- 	Framework  para el desarrollo de aplicaciones web.
-**Entity Framework 6**	- 	ORM Entidad-relación para controlar los datos.
-**JQuery**			-	Programacion para el cliente.
-**Twitter Bootstrap**	-	Diseño de la página web.
-**LocalDB - SQL Server**	-	Almacenamiento de datos.
+-**ASP.NET MVC 5** 		- 	Framework  para el desarrollo de aplicaciones web.
+-**Entity Framework 6**	- 	ORM Entidad-relación para controlar los datos.
+-**JQuery**			-	Programacion para el cliente.
+-**Twitter Bootstrap**	-	Diseño de la página web.
+-**LocalDB - SQL Server**	-	Almacenamiento de datos.
 
 Patron de diseño MVC 
 
