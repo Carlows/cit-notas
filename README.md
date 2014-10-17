@@ -1,13 +1,13 @@
-Centro de Innovación Tecnológica
+#Centro de Innovación Tecnológica
 =========
 
-Lenguaje y Tecnologías que utilizará la aplicación
+###Lenguaje y Tecnologías que utilizará la aplicación
 
-ASP.NET MVC 5 		- 	Framework  para el desarrollo de aplicaciones web
-Entity Framework 6	- 	ORM Entidad-relación para controlar los datos
-JQuery			-	Programacion para el cliente
-Twitter Bootstrap	-	Diseño de la página web
-LocalDB - SQL Server	-	Almacenamiento de datos
+**ASP.NET MVC 5** 		- 	Framework  para el desarrollo de aplicaciones web.
+**Entity Framework 6**	- 	ORM Entidad-relación para controlar los datos.
+**JQuery**			-	Programacion para el cliente.
+**Twitter Bootstrap**	-	Diseño de la página web.
+**LocalDB - SQL Server**	-	Almacenamiento de datos.
 
 Patron de diseño MVC 
 
@@ -20,7 +20,7 @@ CONTROLADORES - Darle un formato a los datos de nuestro modelo para que los cons
 
 ------------------------------------------------------------------------------
 
-Aplicación para el control de asistencias, notas, y minutas de los equipos de proyectos.
+###Aplicación para el control de asistencias, notas, y minutas de los equipos de proyectos.
 
 Tipos de usuario -> Coordinador de celula, Profesores.
 
@@ -37,7 +37,7 @@ tendrá una sección para aprobar las minutas.
 
 ----------------------------------------------------------------------------------
 
-#TODOs
+###TO-DOs
 
 - Definir claramente las ideas principales de la aplicación (Manejo de notas, asistencia y minutas).
 - Modelamiento de la base de datos, definir las entidades y las relaciones.
@@ -45,7 +45,7 @@ tendrá una sección para aprobar las minutas.
 
 ----------------------------------------------------------------------------------
 
-Links de interes:
+###Links de interes:
 
 - Carpeta personal de dropbox con contenido sobre C#, Jquery, ASP.Net, LINQ, etc
   https://www.dropbox.com/sh/0dhg5tk897aqlrb/AACRkwcy_45ijSbVme1SE-Xua?dl=0
