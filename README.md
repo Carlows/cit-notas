@@ -37,6 +37,14 @@ tendrá una sección para aprobar las minutas.
 
 ----------------------------------------------------------------------------------
 
+#TODOs
+
+- Definir claramente las ideas principales de la aplicación (Manejo de notas, asistencia y minutas)
+- Modelamiento de la base de datos, definir las entidades y las relaciones
+- Diseño básico de la interfaz (podría ser mejorada luego)
+- 
+----------------------------------------------------------------------------------
+
 Links de interes:
 
 - Carpeta personal de dropbox con contenido sobre C#, Jquery, ASP.Net, LINQ, etc
