@@ -39,6 +39,10 @@ de acuerdo a este calendario.
 - Las minutas subidas por cada coordinador de celula necesitarán aprobación del profesor, por lo que este 
 tendrá una sección para aprobar las minutas.
 
+#### Diagrama inicial de la base de datos
+
+http://prntscr.com/4xie2h
+
 ----------------------------------------------------------------------------------
 
 ###TO-DOs
