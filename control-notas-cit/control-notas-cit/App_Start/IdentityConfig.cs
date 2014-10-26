@@ -87,9 +87,6 @@ namespace IdentitySample.Models
             string roleName = "Admin";
             string coordinadorRole = "Coordinador";
             string profesorRole = "Profesor";
-            string userName = "admin@cit.com";
-            string password = "admin123";
-            string email = "admin@cit.com";
 
             if (!roleManager.RoleExists(roleName))
             {
@@ -106,6 +103,11 @@ namespace IdentitySample.Models
                 roleManager.Create(new IdentityRole(profesorRole));
             }
 
+            //// Admin
+            string userName = "admin@cit.com";
+            string password = "admin123";
+            string email = "admin@cit.com";
+
             ApplicationUser user = userManager.FindByName(userName);
 
             if (user == null)
@@ -118,6 +120,50 @@ namespace IdentitySample.Models
             {
                 userManager.AddToRole(user.Id, roleName);
             }
+
+            ///////////////////////////////
+
+            //// Coordinador
+
+            string coorUsername = "coordinador@cit.com";
+            string coorEmail = "coordinador@cit.com";
+            string coorPwd = "coordinador123";
+
+            ApplicationUser coorUser = userManager.FindByName(coorUsername);
+
+            if (coorUser == null)
+            {
+                IdentityResult result = userManager.Create(new ApplicationUser { UserName = coorUsername, Email = coorEmail }, coorPwd);
+                coorUser = userManager.FindByName(coorUsername);
+            }
+
+            if (!userManager.IsInRole(coorUser.Id, coordinadorRole))
+            {
+                userManager.AddToRole(coorUser.Id, coordinadorRole);
+            }
+
+            //////////////////////////////
+
+            //// Profesor
+
+            string profUsername = "profesor@cit.com";
+            string profEmail = "profesor@cit.com";
+            string profPwd = "profesor123";
+
+            ApplicationUser profUser = userManager.FindByName(profUsername);
+
+            if (profUser == null)
+            {
+                IdentityResult result = userManager.Create(new ApplicationUser { UserName = profUsername, Email = profEmail }, profPwd);
+                profUser = userManager.FindByName(profUsername);
+            }
+
+            if (!userManager.IsInRole(profUser.Id, profesorRole))
+            {
+                userManager.AddToRole(profUser.Id, profesorRole);
+            }
+
+            //////////////////////////////
         }
     }
 

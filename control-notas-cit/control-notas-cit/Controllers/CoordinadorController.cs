@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace control_notas_cit.Controllers
 {
+    [Authorize(Roles = "Coordinador")]
     public class CoordinadorController : Controller
     {
         //
