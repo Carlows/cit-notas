@@ -43,13 +43,27 @@ tendrá una sección para aprobar las minutas.
 
 http://prntscr.com/4xie2h
 
+#### Pantalla de Log-in
+
+http://prntscr.com/503ymm
+
+#### Diseño inicial
+
+http://prntscr.com/503ywh
+
 ----------------------------------------------------------------------------------
 
 ###TO-DOs
 
 - Definir claramente las ideas principales de la aplicación (Manejo de notas, asistencia y minutas).
+
+
+#### Done
+
 - Modelamiento de la base de datos, definir las entidades y las relaciones.
 - Diseño básico de la interfaz (podría ser mejorada luego).
+- Controladores Administrador, Profesor, Coordinador, al usuario loguearse, este es redireccionado hacia el controlador segun su rol.
+- Log-in.
 
 ----------------------------------------------------------------------------------
 
