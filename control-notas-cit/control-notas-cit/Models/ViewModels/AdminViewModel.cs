@@ -41,6 +41,26 @@ namespace control_notas_cit.Models.ViewModels
         public SelectList Proyectos { get; set; }
     }
 
+    public class ProfesorEditViewModel
+    {
+        public string Id { get; set; }
+        [Required(ErrorMessage = "El email es requerido.")]
+        [EmailAddress]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "El nombre es requerido.")]
+        public string Nombre { get; set; }
+        [Required(ErrorMessage = "El apellido es requerido.")]
+        public string Apellido { get; set; }
+        [Required(ErrorMessage = "La cedula es requerida.")]
+        public string Cedula { get; set; }
+        [Required(ErrorMessage = "El telefono es requerido.")]
+        public string Telefono { get; set; }
+
+        public string Proyecto { get; set; }
+
+        public SelectList Proyectos { get; set; }
+    }
+
     public class RoleViewModel
     {
         public string Id { get; set; }

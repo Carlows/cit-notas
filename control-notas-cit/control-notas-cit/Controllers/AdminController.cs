@@ -104,6 +104,8 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public async Task<ActionResult> AgregarProfesor(ProfesorViewModel model)
         {
+            model.Proyectos = new SelectList(repoProyectos.SelectAll().Select(p => p.Nombre).ToList());
+
             if( ModelState.IsValid )
             {
                 ApplicationUser profesor;
@@ -151,13 +153,12 @@ namespace control_notas_cit.Controllers
                 else
                 {
                     ModelState.AddModelError("", profesorResult.Errors.First());
-                    return View();
+                    return View(model);
                 }
 
                 return RedirectToAction("ListaProfesores");
             }
 
-            model.Proyectos = new SelectList(repoProyectos.SelectAll().Select(p => p.Nombre).ToList());
             return View(model);
         }
 
@@ -177,30 +178,74 @@ namespace control_notas_cit.Controllers
 
             if (profesor.Proyecto != null)
             {
-                return View(new ProfesorViewModel()
+                return View(new ProfesorEditViewModel()
                 {
                     Id = profesor.Id,
                     Nombre = profesor.Nombre,
                     Apellido = profesor.Apellido,
                     Email = profesor.Email,
+                    Telefono = profesor.PhoneNumber,
+                    Cedula = profesor.Cedula,
                     Proyectos = new SelectList(repoProyectos.SelectAll().Select(p => p.Nombre).ToList(), profesor.Proyecto.Nombre)
                 });
             }
             else
             {
-                return View(new ProfesorViewModel()
+                return View(new ProfesorEditViewModel()
                 {
                     Id = profesor.Id,
                     Nombre = profesor.Nombre,
                     Apellido = profesor.Apellido,
                     Email = profesor.Email,
+                    Telefono = profesor.PhoneNumber,
+                    Cedula = profesor.Cedula,
                     Proyectos = new SelectList(repoProyectos.SelectAll().Select(p => p.Nombre).ToList())
                 });
             }
         }
 
         //
-        // POST: /Roles/Delete/5
+        // POST: /Admin/EditarProfesor/1
+        [HttpPost]
+        public async Task<ActionResult> EditarProfesor(ProfesorEditViewModel model)
+        {
+            model.Proyectos = new SelectList(repoProyectos.SelectAll().Select(p => p.Nombre).ToList());
+
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByIdAsync(model.Id);
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
+
+                user.UserName = model.Email;
+                user.Email = model.Email;
+                user.Nombre = model.Nombre;
+                user.Apellido = model.Apellido;
+                user.Cedula = model.Cedula;
+                user.PhoneNumber = model.Telefono;
+
+                if( model.Proyecto != null )
+                {
+                    user.Proyecto = AppContext.Proyectos.Where(p => p.Nombre == model.Proyecto).Single();
+                }
+
+                var result = await UserManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", result.Errors.First());
+                    return View(model);
+                }
+                return RedirectToAction("ListaProfesores");
+            }
+            ModelState.AddModelError("", "Algo falló.");
+            return View(model);
+        }
+
+        //
+        // POST: /Admin/BorrarProfesor/5
         [HttpPost]
         public async Task<ActionResult> BorrarProfesor(string id)
         {

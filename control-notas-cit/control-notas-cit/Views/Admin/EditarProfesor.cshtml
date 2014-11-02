@@ -1,4 +1,4 @@
-﻿@model control_notas_cit.Models.ViewModels.ProfesorViewModel
+﻿@model control_notas_cit.Models.ViewModels.ProfesorEditViewModel
 @{
     ViewBag.Title = "Editar Profesor";
     ViewBag.Seccion = "Administrador global";
@@ -15,7 +15,7 @@
     </div>
     <div class="box-content">
         <fieldset>
-            @using (Html.BeginForm("AgregarProfesor", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
+            @using (Html.BeginForm("EditarProfesor", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
             {
                 @Html.HiddenFor(model => model.Id)
                 
@@ -57,16 +57,7 @@
                     </div>
 
                 </div>
-
-                <div class="control-group">
-                    @Html.LabelFor(model => model.PasswordHash, new { @class = "control-label" })
-                    <div class="controls">
-                        @Html.PasswordFor(model => model.PasswordHash)
-                        @Html.ValidationMessageFor(model => model.PasswordHash)
-                    </div>
-
-                </div>
-
+                
                 <div class="control-group">
                     @Html.LabelFor(model => model.Telefono, new { @class = "control-label" })
                     <div class="controls">
