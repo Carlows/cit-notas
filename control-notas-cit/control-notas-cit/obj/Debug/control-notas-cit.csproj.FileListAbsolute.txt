@@ -56,7 +56,6 @@ E:\Asp.Net projects\CIT-notas\control-notas-cit\control-notas-cit\bin\es\System.
 E:\Asp.Net projects\CIT-notas\control-notas-cit\control-notas-cit\bin\es\System.Web.WebPages.resources.dll
 E:\Asp.Net projects\CIT-notas\control-notas-cit\control-notas-cit\bin\es\System.Web.WebPages.Deployment.resources.dll
 E:\Asp.Net projects\CIT-notas\control-notas-cit\control-notas-cit\bin\es\System.Web.WebPages.Razor.resources.dll
+E:\Asp.Net projects\CIT-notas\control-notas-cit\control-notas-cit\obj\Debug\control-notas-cit.csprojResolveAssemblyReference.cache
 E:\Asp.Net projects\CIT-notas\control-notas-cit\control-notas-cit\obj\Debug\control-notas-cit.dll
 E:\Asp.Net projects\CIT-notas\control-notas-cit\control-notas-cit\obj\Debug\control-notas-cit.pdb
-E:\Asp.Net projects\CIT-notas\control-notas-cit\control-notas-cit\obj\Debug\control-notas-cit.csprojResolveAssemblyReference.cache
-E:\Asp.Net projects\CIT-notas\control-notas-cit\control-notas-cit\bin\es\Microsoft.AspNet.Identity.Core.resources.dll
