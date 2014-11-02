@@ -10,6 +10,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using control_notas_cit.Models.ViewModels;
 
 namespace IdentitySample.Controllers
 {

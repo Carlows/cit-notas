@@ -154,7 +154,26 @@ namespace IdentitySample.Models
 
             if (profUser == null)
             {
-                IdentityResult result = userManager.Create(new ApplicationUser { UserName = profUsername, Email = profEmail }, profPwd);
+                IdentityResult result = userManager.Create(new ApplicationUser { UserName = profUsername, Email = profEmail, Nombre = "Carlos", Apellido = "Martinez", Cedula = "23.522.896" }, profPwd);
+                profUser = userManager.FindByName(profUsername);
+            }
+
+            if (!userManager.IsInRole(profUser.Id, profesorRole))
+            {
+                userManager.AddToRole(profUser.Id, profesorRole);
+            }
+
+            ////////////////////////////
+
+            profUsername = "profesor2@cit.com";
+            profEmail = "profesor2@cit.com";
+            profPwd = "profesor123";
+
+            profUser = userManager.FindByName(profUsername);
+
+            if (profUser == null)
+            {
+                IdentityResult result = userManager.Create(new ApplicationUser { UserName = profUsername, Email = profEmail, Nombre = "Joseito", Apellido = "Martinez", Cedula = "23.522.896" }, profPwd);
                 profUser = userManager.FindByName(profUsername);
             }
 

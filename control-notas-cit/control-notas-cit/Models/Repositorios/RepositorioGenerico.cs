@@ -12,9 +12,9 @@ namespace control_notas_cit.Models.Repositorios
         private ApplicationDbContext contexto;
         private DbSet<T> tabla = null;
 
-        public RepositorioGenerico()
+        public RepositorioGenerico(ApplicationDbContext context)
         {
-            this.contexto = new ApplicationDbContext();
+            this.contexto = context;
             tabla = contexto.Set<T>();
         }
 
@@ -50,4 +50,4 @@ namespace control_notas_cit.Models.Repositorios
             contexto.SaveChanges();
         }
     }
-}
+} 
