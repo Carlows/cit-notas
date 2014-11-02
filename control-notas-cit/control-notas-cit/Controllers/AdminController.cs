@@ -25,10 +25,16 @@ namespace control_notas_cit.Controllers
 
         public AdminController()
         {
-            AppContext = new ApplicationDbContext();
+            //AppContext = new ApplicationDbContext();
+
+            // Obtengo el contexto que OWIN creó al iniciar la aplicación
+            AppContext = ApplicationDbContext.GetDBContext();
+
+            // Se lo paso a mi repositorio
             this.repoProyectos = new RepositorioGenerico<Proyecto>(AppContext);
             this.repoUsers = new RepositorioGenerico<ApplicationUser>(AppContext);
 
+            // Necesito el id del rol del profesor para usarlo en este controlador
             this.profesor_rol_id = (AppContext.Roles.Where(x => x.Name == "Profesor")).Select(y => y.Id).Single();
         }
 
@@ -229,6 +235,10 @@ namespace control_notas_cit.Controllers
                 if( model.Proyecto != null )
                 {
                     user.Proyecto = AppContext.Proyectos.Where(p => p.Nombre == model.Proyecto).Single();
+                }
+                else
+                {
+                    user.Proyecto = null;
                 }
 
                 var result = await UserManager.UpdateAsync(user);

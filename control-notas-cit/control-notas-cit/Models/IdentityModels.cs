@@ -4,6 +4,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace IdentitySample.Models
 {
@@ -43,6 +45,11 @@ namespace IdentitySample.Models
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+
+        public static ApplicationDbContext GetDBContext()
+        {
+            return HttpContext.Current.GetOwinContext().Get<ApplicationDbContext>();
         }
 
         // DbSets personalizados en donde se guardara la data de la aplicación
