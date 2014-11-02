@@ -51,6 +51,22 @@ http://prntscr.com/503ymm
 
 http://prntscr.com/503ywh
 
+#### Lista Profesores
+
+http://prntscr.com/5261bu
+
+#### Agregar Profesor
+
+http://prntscr.com/5261gw
+
+#### Crear Proyecto
+
+http://prntscr.com/5261kx
+
+#### Lista de Proyectos
+
+http://prntscr.com/5261vo
+
 ----------------------------------------------------------------------------------
 
 ###TO-DOs
