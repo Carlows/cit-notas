@@ -1,39 +1,42 @@
 ﻿@using control_notas_cit.Helpers
+@model control_notas_cit.Models.ViewModels.ProfesorIndexViewModel
 @{
     ViewBag.Title = "Profesor";
-    ViewBag.Seccion = "Profesor - {{{Nombre Proyecto}}}";
+    ViewBag.Seccion = @Model.NombreProfesor + " - " + @Model.Proyecto.Nombre;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section sidebar{
-    <li class="@Html.IsSelected(action: "Index")"><a href="#"><i class="icon-bar-chart"></i><span class="hidden-tablet"> Profesor 1</span></a></li>
-    <li><a href="#"><i class="icon-bar-chart"></i><span class="hidden-tablet"> Profesor 2</span></a></li>
-    <li><a href="#"><i class="icon-bar-chart"></i><span class="hidden-tablet"> Profesor 3</span></a></li>
-    <li><a href="#"><i class="icon-bar-chart"></i><span class="hidden-tablet"> Profesor 4</span></a></li>
+    @Html.Partial("_SidebarProfesorPartialView")
 }
 
-<h2>Index</h2>
-
-<p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam aliquam tincidunt massa, non ullamcorper tortor varius a. Ut vel diam iaculis, vehicula tortor non, dapibus erat. Ut lectus enim, sagittis vel lacinia vitae, congue sed mauris. Mauris venenatis, justo non finibus egestas, lacus mi viverra neque, in cursus libero urna ut ante. Fusce porttitor a metus in consequat. Phasellus in velit lorem. Quisque non ante egestas, lacinia sem sed, malesuada leo. Nunc fringilla felis eget dictum suscipit. Nam eros arcu, interdum vitae tellus at, tincidunt pharetra mauris. Duis varius odio at lacus fermentum ultrices. Integer id vulputate nibh. Vivamus eu mi id neque elementum cursus. Vivamus vitae malesuada ligula.
-
-    Cras porta a erat tincidunt eleifend. Nullam molestie, felis quis rutrum ultricies, dolor turpis pretium justo, sit amet facilisis dui massa sed purus. Aliquam erat volutpat. Phasellus a lacinia est, nec commodo turpis. Proin volutpat erat in mauris ullamcorper, vitae faucibus quam interdum. Praesent pellentesque aliquet dolor, eget imperdiet risus facilisis ut. Sed odio est, porta pharetra ex non, placerat venenatis elit.
-
-    Quisque congue, risus vehicula fermentum fermentum, est felis vestibulum turpis, sed gravida est elit eu magna. Curabitur posuere blandit auctor. Donec facilisis rutrum velit sit amet rhoncus. Mauris eu justo leo. Duis sit amet risus vel quam ultricies consectetur. Mauris eu erat quis magna commodo eleifend. Ut rutrum viverra dolor ac porttitor.
-
-    Nam vehicula euismod sapien, id posuere enim maximus et. Pellentesque ac augue eget lacus maximus mollis. Vivamus quis urna vel odio lobortis viverra. Fusce nec dolor massa. Phasellus a rhoncus tortor, in ultrices odio. Proin vitae ultrices risus. Vestibulum lectus mi, ultrices in dolor at, elementum ullamcorper odio. Proin eu orci gravida, efficitur ipsum in, tempus eros. Aenean auctor ultrices mi, eu vestibulum diam molestie quis. Etiam semper bibendum odio eget semper. Donec a fermentum ante, nec aliquet sem. Duis mollis, tortor a porta eleifend, urna nisl consequat eros, et dapibus risus felis ut purus. Mauris nec diam a sapien molestie dapibus.
-
-    Pellentesque scelerisque quam sit amet sem dapibus pretium. Vivamus vitae scelerisque arcu. Aenean ligula orci, lobortis non cursus semper, viverra at magna. Etiam sit amet dui quis massa pulvinar bibendum sed eget felis. Duis et pellentesque est, vitae convallis ipsum. Curabitur sodales nisl eget nisl ullamcorper auctor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nullam eu lacus eget dolor tincidunt facilisis. Morbi ullamcorper accumsan odio, nec molestie nulla lacinia sed.
-
-    Nulla pellentesque sapien non pellentesque ornare. Sed aliquam augue id ullamcorper tristique. Sed id ipsum iaculis, cursus ante ut, consectetur metus. Proin suscipit aliquet velit, eu pretium augue consequat vel. Nam id sem sapien. Praesent aliquet mauris leo, ac fringilla ex consequat vitae. Integer maximus est ut urna cursus auctor. Integer lacinia ligula ut nulla suscipit tempus.
-
-    In sodales mi a molestie dapibus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur imperdiet turpis at turpis tempor, non maximus ligula posuere. Vestibulum eu augue id felis venenatis pretium vitae sit amet felis. Nam ultricies, arcu pellentesque tristique venenatis, lacus magna ultrices nisl, id consectetur dui neque nec nunc. Phasellus fermentum nibh ut lorem eleifend venenatis. Donec elementum, mauris sed placerat convallis, tortor odio elementum lacus, sit amet ultricies massa nunc sed leo. Integer eu mi sit amet nibh tempor malesuada ut vel lorem. Suspendisse sit amet tempus orci. Sed sit amet felis tellus. Mauris in consectetur nisi. Phasellus ante turpis, dignissim quis urna in, malesuada porttitor sem. Sed risus mauris, molestie vel ligula nec, ultrices tincidunt eros.
-
-    Phasellus quam arcu, rutrum sit amet rhoncus at, aliquet sed nisi. Praesent facilisis efficitur bibendum. Aliquam egestas libero augue, non posuere velit maximus ut. Mauris non urna diam. Duis sem ex, pellentesque eu massa at, luctus lobortis ipsum. Nulla consequat nibh sem, vitae laoreet arcu bibendum condimentum. Cras tempus pellentesque ullamcorper. Sed iaculis massa odio, eget dapibus augue gravida commodo. Proin id finibus lorem.
-
-    Nunc lacinia quam tellus, et dapibus turpis maximus elementum. Curabitur dignissim justo quis feugiat viverra. Ut in laoreet ipsum, tincidunt tincidunt massa. Mauris suscipit aliquam risus non lacinia. Duis convallis erat in ex efficitur, eget aliquet libero luctus. Donec dignissim risus eget eros rutrum, eu pulvinar orci maximus. Duis sed enim urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In hac habitasse platea dictumst.
-
-    Duis at arcu ante. Ut facilisis lacus ut justo pretium pellentesque mattis nec purus. Vestibulum ipsum nibh, pharetra at diam at, vehicula lobortis ex. Fusce ultricies neque vitae odio condimentum varius. Sed condimentum lacinia sem, ac tristique est egestas id. Vestibulum eget mattis felis, eget finibus felis. Ut ullamcorper lorem eget nibh cursus, rhoncus lacinia magna suscipit. Curabitur ac commodo risus, vel congue arcu. Sed condimentum massa sed felis dignissim fermentum. Quisque tincidunt auctor sapien, at tincidunt lectus fringilla vel. Sed nec viverra turpis. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus aliquet hendrerit ex quis tristique. Cras laoreet varius tortor, sit amet pharetra nisi porttitor sit amet. Quisque eu orci dapibus, molestie ex a, bibendum ex.
-</p>
-
-
+<div class="row-fluid">
+    <!-- Calendario -->
+    <div class="box span8"></div> 
+    <!-- Datos del proyecto -->
+    <div class="box black span4" style="color:#333;">
+        <div class="box-header" data-original-title="">
+            <h2>@Model.Proyecto.Nombre</h2>
+        </div>
+        <div class="box-content">
+            <div class="page-header">
+                <h2>@Model.Proyecto.Nombre</h2>
+            </div>
+            <div class="row-fluid">
+                <h3>Profesores del proyecto</h3>
+                <ul>
+                    @foreach (var profesor in @Model.Proyecto.Profesores.Select(p => new { Nombre = p.Nombre, Apellido = p.Apellido }))
+                    {
+                        <li><strong>@profesor.Nombre @profesor.Apellido</strong></li>
+                    }
+                </ul>
+            </div>
+            <hr />
+            <div class="row-fluid">
+                <div class="well">
+                    <p>@Model.Proyecto.Descripcion</p>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>

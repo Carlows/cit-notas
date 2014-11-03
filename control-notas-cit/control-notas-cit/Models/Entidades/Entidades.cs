@@ -16,9 +16,21 @@ namespace control_notas_cit.Models.Entidades
 
         [DataType(DataType.MultilineText)]
         public string Descripcion { get; set; }
+        public int CalendarioActualID { get; set; }
 
         public virtual List<ApplicationUser> Profesores { get; set; }
         public virtual List<Celula> Celulas { get; set; }
+        public virtual List<Calendario> Calendarios { get; set; }
+    }
+
+    public class Calendario
+    {
+        [Key]
+        public int CalendarioID { get; set; }
+        //public DateTime FechaInicio { get; set; }
+        //public DateTime FechaFinal { get; set; }
+        public int SemanaActualID { get; set; }
+        public virtual List<Semana> Semanas { get; set; }
     }
 
     public class Celula
@@ -53,10 +65,12 @@ namespace control_notas_cit.Models.Entidades
         public Minuta()
         {
             this.Aprobada = false;
+            this.Fecha = DateTime.Now;
         }
 
         [Key]
         public int MinutaID { get; set; }
+        public DateTime Fecha { get; set; }
         public bool? Aprobada { get; set; }
 
         [DataType(DataType.MultilineText)]
@@ -68,6 +82,12 @@ namespace control_notas_cit.Models.Entidades
 
     public class Semana
     {
+        public Semana()
+        {
+            this.Iniciada = false;
+            this.Terminada = false;
+        }
+
         [Key]
         public int SemanaID { get; set; }
         public int NumeroSemana { get; set; }
@@ -75,6 +95,9 @@ namespace control_notas_cit.Models.Entidades
         public string Actividad { get; set; }
         [DataType(DataType.MultilineText)]
         public string Descripcion { get; set; }
+        public bool Iniciada { get; set; }
+        public bool Terminada { get; set; }
+        public DateTime Fecha { get; set; }
 
         public virtual List<Minuta> Minutas { get; set; }
         public virtual List<Asistencia> Asistencias { get; set; }
@@ -88,7 +111,7 @@ namespace control_notas_cit.Models.Entidades
         public int Nota_Asistencia { get; set; }
         public int Nota_Final { get; set; }
     }
-
+    
     public class Asistencia
     {
         public Asistencia()

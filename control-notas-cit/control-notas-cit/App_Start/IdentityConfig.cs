@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web;
+using control_notas_cit.Models.Entidades;
 
 namespace IdentitySample.Models
 {
@@ -146,8 +147,8 @@ namespace IdentitySample.Models
 
             //// Profesor
 
-            string profUsername = "profesor@cit.com";
-            string profEmail = "profesor@cit.com";
+            string profUsername = "profesor2@cit.com";
+            string profEmail = "profesor2@cit.com";
             string profPwd = "profesor123";
 
             ApplicationUser profUser = userManager.FindByName(profUsername);
@@ -165,8 +166,8 @@ namespace IdentitySample.Models
 
             ////////////////////////////
 
-            profUsername = "profesor2@cit.com";
-            profEmail = "profesor2@cit.com";
+            profUsername = "profesor@cit.com";
+            profEmail = "profesor@cit.com";
             profPwd = "profesor123";
 
             profUser = userManager.FindByName(profUsername);
@@ -182,7 +183,7 @@ namespace IdentitySample.Models
                 userManager.AddToRole(profUser.Id, profesorRole);
             }
 
-            //////////////////////////////
+            //////////////////////////////    
         }
     }
 

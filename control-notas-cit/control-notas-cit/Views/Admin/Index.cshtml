@@ -11,7 +11,7 @@
 @section sidebar{
     @Html.Partial("_SidebarPartialView")
 }
-
+<!--- La lógica que tiene la vista es para dividir los proyectos de 2 en 2 sin perder el layout --->
 @if (Model.Count <= 0)
 {
     <div class="alert alert-error">

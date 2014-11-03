@@ -25,8 +25,6 @@ namespace control_notas_cit.Controllers
 
         public AdminController()
         {
-            //AppContext = new ApplicationDbContext();
-
             // Obtengo el contexto que OWIN creó al iniciar la aplicación
             AppContext = ApplicationDbContext.GetDBContext();
 
@@ -49,7 +47,7 @@ namespace control_notas_cit.Controllers
         // GET: /Admin/Crear/
         public ActionResult Crear()
         {
-            List<ApplicationUser> users = AppContext.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(profesor_rol_id)).ToList();
+            List<ApplicationUser> users = repoUsers.SelectAll().Where(x => x.Roles.Select(y => y.RoleId).Contains(profesor_rol_id)).ToList();
             List<string> nombres = new List<string>();
 
             foreach( ApplicationUser u in users )
@@ -70,7 +68,7 @@ namespace control_notas_cit.Controllers
         {
             if( ModelState.IsValid )
             {
-                List<ApplicationUser> profesores = (from u in AppContext.Users
+                List<ApplicationUser> profesores = (from u in repoUsers.SelectAll()
                                                    where model.Profesores.Contains(string.Concat(u.Nombre, " ", u.Apellido))
                                                    select u).ToList();
                 Proyecto p = new Proyecto()
@@ -91,7 +89,7 @@ namespace control_notas_cit.Controllers
         // GET: /Admin/ListaProfesores/
         public ActionResult ListaProfesores()
         {
-            List<ApplicationUser> model = AppContext.Users.Where(u => u.Roles.Select(r => r.RoleId).Contains(profesor_rol_id)).ToList();
+            List<ApplicationUser> model = repoUsers.SelectAll().Where(u => u.Roles.Select(r => r.RoleId).Contains(profesor_rol_id)).ToList();
             return View(model);
         }
 
@@ -274,6 +272,9 @@ namespace control_notas_cit.Controllers
             return RedirectToAction("ListaProfesores");
         }
 
+
+        // Estos métodos permiten acceder a la información de los usuarios, aunque también se pueden obtener a través de la tabla Users
+        // Sin embargo, UserManager y RoleManager tienen métodos asincronicos mucho más optimizados
         private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager
         {
