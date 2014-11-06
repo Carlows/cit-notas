@@ -27,9 +27,10 @@ namespace control_notas_cit.Models.Entidades
     {
         [Key]
         public int CalendarioID { get; set; }
-        //public DateTime FechaInicio { get; set; }
-        //public DateTime FechaFinal { get; set; }
+        public DateTime FechaInicio { get; set; }
+        public DateTime FechaFinal { get; set; }
         public int SemanaActualID { get; set; }
+        public virtual Proyecto Proyecto { get; set; }
         public virtual List<Semana> Semanas { get; set; }
     }
 

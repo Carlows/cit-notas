@@ -44,13 +44,13 @@ namespace control_notas_cit.Controllers
             ProfesorIndexViewModel model = new ProfesorIndexViewModel();
 
             // Obtengo el usuario
-            var currentUser = repoUsers.SelectAll().Where(u => u.Id == User.Identity.GetUserId()).Single();
+            var currentUser = GetCurrentUser();
 
             if( currentUser == null )
             {
                 return HttpNotFound();
             }
-            
+
             // Utilizo el usuario para obtener los demas datos del modelo de la vista
             model.NombreProfesor = currentUser.Nombre + " " + currentUser.Apellido;
             model.Proyecto = repoProyectos.SelectAll().Where(p => p.ProyectoID == currentUser.Proyecto.ProyectoID).Single();
@@ -63,6 +63,90 @@ namespace control_notas_cit.Controllers
             return View(model);
         }
 
+        //
+        // GET: /Profesor/AgregarCalendario/
+        public ActionResult AgregarCalendario()
+        {
+            List<Semana> semanas = new List<Semana>();
+
+            for (int i = 1; i <= 12; i++ )
+            {
+                Semana s = new Semana()
+                {
+                    NumeroSemana = i
+                };
+
+                semanas.Add(s);
+            }
+
+            CalendarioViewModel model = new CalendarioViewModel()
+            {
+                FechaInicio = DateTime.Now,
+                Semanas = semanas
+            };
+
+            return View(model);
+        }
+
+        //
+        // POST: /Profesor/AgregarCalendario/
+        [HttpPost]
+        public ActionResult AgregarCalendario(CalendarioViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Calendario calendario = new Calendario();
+
+                // Cada calendario cuenta con 12 semanas
+                int numeroSemanas = 12;
+
+                calendario.FechaInicio = model.FechaInicio;
+                calendario.FechaFinal = model.FechaInicio.AddDays(numeroSemanas * 7);
+
+                List<Semana> semanas = model.Semanas;
+                calendario.Semanas = new List<Semana>();
+
+                foreach (Semana s in semanas)
+                {
+                    s.Fecha = model.FechaInicio.AddDays(s.NumeroSemana * 7);
+                    calendario.Semanas.Add(s);
+                }
+
+                var user = GetCurrentUser();
+
+                if( user == null )
+                {
+                    return HttpNotFound("Usuario no encontrado");
+                }
+
+                var proyecto = user.Proyecto;
+
+                if(proyecto == null)
+                {
+                    return HttpNotFound("Proyecto no encontrado");
+                }
+
+                calendario.Proyecto = proyecto;
+
+                repoCalendarios.Insert(calendario);
+                repoCalendarios.Save();
+
+                calendario.SemanaActualID = calendario.Semanas.Where(s => s.NumeroSemana == 1).Select(i => i.SemanaID).Single();
+                proyecto.CalendarioActualID = calendario.CalendarioID;
+
+                repoProyectos.Update(proyecto);
+                repoProyectos.Save();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+        private ApplicationUser GetCurrentUser()
+        {
+            return repoUsers.SelectAll().Where(u => u.Id == User.Identity.GetUserId()).Single();
+        }
 
         // Estos métodos permiten acceder a la información de los usuarios, aunque también se pueden obtener a través de la tabla Users
         // Sin embargo, UserManager y RoleManager tienen métodos asincronicos mucho más optimizados

@@ -1,8 +1,9 @@
 ﻿@using control_notas_cit.Helpers
 @model control_notas_cit.Models.ViewModels.ProfesorIndexViewModel
+@using control_notas_cit.Models.Entidades
 @{
     ViewBag.Title = "Profesor";
-    ViewBag.Seccion = @Model.NombreProfesor + " - " + @Model.Proyecto.Nombre;
+    ViewBag.Seccion = "Profesor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,7 +13,54 @@
 
 <div class="row-fluid">
     <!-- Calendario -->
-    <div class="box span8"></div> 
+    <div class="box span8">
+        <div class="box-header">
+            <h2>Calendario</h2>
+        </div>
+        <div class="box-content">
+            @if(Model.Calendario == null)
+            {
+                <label>Aún no existe calendario actual para este proyecto, @Html.ActionLink("Crea uno acá.", "AgregarCalendario")</label>
+            }
+            else
+            {
+                foreach(Semana s in @Model.Calendario.Semanas)
+                { 
+                    if(Model.Calendario.SemanaActualID == s.SemanaID) {
+                        <div style="color:#333; margin-bottom: 0px;" class="box blue caja">                    
+                            <div class="box-header blue cajaclick" >
+                                <h2>Semana @s.NumeroSemana</h2>
+                            </div>
+                            <div class="box-content cajacontent" style="">
+                                <h4>Descripcion de la semana</h4>
+                                <p>@s.Descripcion</p>
+
+                                <h4>Actividad a realizar</h4>
+                                <p>@s.Actividad</p>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="color:#333; margin-bottom: 0px;" class="box caja">                    
+                            <div class="box-header cajaclick">
+                                <h2>Semana @s.NumeroSemana</h2>
+                            </div>
+                            <div class="box-content cajacontent" style="display:none;">
+                                <h4>Descripcion de la semana</h4>
+                                <p>@s.Descripcion</p>
+
+                                <h4>Actividad a realizar</h4>
+                                <p>@s.Actividad</p>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div> 
+
+
     <!-- Datos del proyecto -->
     <div class="box black span4" style="color:#333;">
         <div class="box-header" data-original-title="">
@@ -40,3 +88,20 @@
         </div>
     </div> 
 </div>
+
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".caja").each(function () {
+                var $caja = $(this);
+
+                $(".cajaclick", $caja).click(function () {
+                    var $div = $(".cajacontent", $caja);
+                    $div.slideToggle();
+                    $(".cajacontent").not($div).slideUp();
+                });
+            });
+        });
+    </script>
+}
