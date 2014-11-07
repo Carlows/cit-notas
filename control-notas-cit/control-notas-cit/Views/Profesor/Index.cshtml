@@ -29,14 +29,17 @@
                     if(Model.Calendario.SemanaActualID == s.SemanaID) {
                         <div style="color:#333; margin-bottom: 0px;" class="box blue caja">                    
                             <div class="box-header blue cajaclick" >
-                                <h2>Semana @s.NumeroSemana</h2>
+                                <h2>Semana @s.NumeroSemana </h2> <label class="text-right">@s.Fecha.ToShortDateString()</label>
                             </div>
-                            <div class="box-content cajacontent" style="">
+                            <div class="box-content cajacontent clearfix" style="">
                                 <h4>Descripcion de la semana</h4>
                                 <p>@s.Descripcion</p>
 
                                 <h4>Actividad a realizar</h4>
                                 <p>@s.Actividad</p>
+
+                                <a href="@Url.Action("EditarSemana", new { id = s.SemanaID })" class="btn btn-primary pull-right">Editar</a>
+                                <a href="@Url.Action("FinalizarSemana", new { id = s.SemanaID })" class="btn btn-danger pull-right" style="margin-right:8px;">Finalizar</a>
                             </div>
                         </div>
                     }
@@ -44,14 +47,16 @@
                     {
                         <div style="color:#333; margin-bottom: 0px;" class="box caja">                    
                             <div class="box-header cajaclick">
-                                <h2>Semana @s.NumeroSemana</h2>
+                                <h2>Semana @s.NumeroSemana </h2><label class="text-right">@s.Fecha.ToShortDateString()</label>
                             </div>
-                            <div class="box-content cajacontent" style="display:none;">
+                            <div class="box-content cajacontent clearfix" style="display:none;">
                                 <h4>Descripcion de la semana</h4>
                                 <p>@s.Descripcion</p>
 
                                 <h4>Actividad a realizar</h4>
                                 <p>@s.Actividad</p>
+
+                                <a href="@Url.Action("EditarSemana", new { id = s.SemanaID })" class="btn pull-right">Editar</a>
                             </div>
                         </div>
                     }

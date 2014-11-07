@@ -1,3 +1,4 @@
 control-notas-cit/control-notas-cit/Controllers/ManageController.cs
 control-notas-cit/control-notas-cit/Controllers/RolesAdminController.cs
 control-notas-cit/control-notas-cit/Controllers/UserAdminController.cs
+control-notas-cit/control-notas-cit/Models/ViewModels/ManageViewModels.cs

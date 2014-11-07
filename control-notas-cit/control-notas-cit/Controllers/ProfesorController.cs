@@ -24,6 +24,7 @@ namespace control_notas_cit.Controllers
         private IRepositorioGenerico<ApplicationUser> repoUsers = null;
         private IRepositorioGenerico<Proyecto> repoProyectos = null;
         private IRepositorioGenerico<Calendario> repoCalendarios = null;
+        private IRepositorioGenerico<Semana> repoSemanas = null;
 
         public ProfesorController()
         {
@@ -35,6 +36,7 @@ namespace control_notas_cit.Controllers
             this.repoUsers = new RepositorioGenerico<ApplicationUser>(AppContext);
             this.repoProyectos = new RepositorioGenerico<Proyecto>(AppContext);
             this.repoCalendarios = new RepositorioGenerico<Calendario>(AppContext);
+            this.repoSemanas = new RepositorioGenerico<Semana>(AppContext);
         }
 
         //
@@ -131,7 +133,9 @@ namespace control_notas_cit.Controllers
                 repoCalendarios.Insert(calendario);
                 repoCalendarios.Save();
 
-                calendario.SemanaActualID = calendario.Semanas.Where(s => s.NumeroSemana == 1).Select(i => i.SemanaID).Single();
+                Semana sem = calendario.Semanas.Where(s => s.NumeroSemana == 1).Single();
+                sem.Iniciada = true;
+                calendario.SemanaActualID = sem.SemanaID;
                 proyecto.CalendarioActualID = calendario.CalendarioID;
 
                 repoProyectos.Update(proyecto);
@@ -143,8 +147,94 @@ namespace control_notas_cit.Controllers
             return View(model);
         }
 
+        //
+        // GET: /Profesor/EditarSemana/
+        public ActionResult EditarSemana(int id)
+        {
+            Semana s = repoSemanas.SelectById(id);
+            var model = new SemanaViewModel()
+            {
+                SemanaID = s.SemanaID,
+                Fecha = s.Fecha,
+                Actividad = s.Actividad,
+                Descripcion = s.Descripcion,
+                NumeroSemana = s.NumeroSemana
+            };
+            return View(model);
+        }
+
+        //
+        // POST: /Profesor/EditarSemana/
+        [HttpPost]
+        public ActionResult EditarSemana(SemanaViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Semana semana = repoSemanas.SelectById(model.SemanaID);
+
+                if (semana == null)
+                {
+                    ModelState.AddModelError("", "No se pudo encontrar esta semana");
+                    return View(model);
+                }
+
+                semana.Actividad = model.Actividad;
+                semana.Descripcion = model.Descripcion;
+
+                repoSemanas.Update(semana);
+                repoSemanas.Save();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+        // ### NOTA en esta vista se le pedira al profesor revisar las minutas faltantes por revisar
+        // ### crear un modelo para esta vista y pasarle esas minutas
+        // GET: /Profesor/FinalizarSemana/
+        public ActionResult FinalizarSemana(int id)
+        {
+            Semana model = repoSemanas.SelectById(id);
+            return View(model);
+        }
+
+        //
+        // POST: /Profesor/FinalizarSemana/
+        [HttpPost]
+        public ActionResult FinalizarSemana(int? id)
+        {
+            if (id != null)
+            {
+                Semana semana = repoSemanas.SelectById(id);
+
+                if (semana.Iniciada == true && semana.Finalizada == false)
+                {
+                    semana.Finalizada = true;
+                    repoSemanas.Update(semana);
+
+                    if (semana.NumeroSemana < 12)
+                    {
+                        Semana proximaSemana = repoSemanas.SelectAll().Where(s => s.NumeroSemana == (semana.NumeroSemana + 1)).Single();
+                        proximaSemana.Iniciada = true;
+                        proximaSemana.Calendario.SemanaActualID = proximaSemana.SemanaID;
+
+                        repoSemanas.Update(proximaSemana);
+                    }
+
+                    repoSemanas.Save();
+                }
+
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
+
+        // Obtiene el usuario logueado actualmente
         private ApplicationUser GetCurrentUser()
         {
+            // Tira una excepcion cuando el explorador ya tiene una sesion iniciada, debido a que al ejecutar el Seed, el id es totalmente distinto
             return repoUsers.SelectAll().Where(u => u.Id == User.Identity.GetUserId()).Single();
         }
 

@@ -86,7 +86,7 @@ namespace control_notas_cit.Models.Entidades
         public Semana()
         {
             this.Iniciada = false;
-            this.Terminada = false;
+            this.Finalizada = false;
         }
 
         [Key]
@@ -97,9 +97,11 @@ namespace control_notas_cit.Models.Entidades
         [DataType(DataType.MultilineText)]
         public string Descripcion { get; set; }
         public bool Iniciada { get; set; }
-        public bool Terminada { get; set; }
+        public bool Finalizada { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
         public DateTime Fecha { get; set; }
 
+        public virtual Calendario Calendario { get; set; }
         public virtual List<Minuta> Minutas { get; set; }
         public virtual List<Asistencia> Asistencias { get; set; }
     }

@@ -1,0 +1,32 @@
+﻿@model control_notas_cit.Models.Entidades.Semana
+
+@{
+    ViewBag.Title = "Finalizar Semana";
+    ViewBag.Seccion = "Profesor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section sidebar{
+    @Html.Partial("_SidebarProfesorPartialView")
+}
+
+<div class="row-fluid">
+    <div class="box span6">
+        <div class="box-header">
+            <h2>Confirmar</h2>
+        </div>
+        <div class="box-content">
+            <fieldset>
+                @using (Html.BeginForm("FinalizarSemana", "Profesor", new { id = @Model.SemanaID }, FormMethod.Post, new { @class = "form-horizontal" }))
+                {                    
+                    <h3>Estás seguro?</h3>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-danger">Finalizar</button>
+                        @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn" })
+                    </div>
+                }
+            </fieldset>
+        </div>
+    </div> 
+</div>
