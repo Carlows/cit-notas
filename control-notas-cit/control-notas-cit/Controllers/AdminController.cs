@@ -86,6 +86,9 @@ namespace control_notas_cit.Controllers
         }
 
         //
+        // GET: /Admin/EditarProyecto/
+
+        //
         // GET: /Admin/ListaProfesores/
         public ActionResult ListaProfesores()
         {

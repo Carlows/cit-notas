@@ -44,6 +44,7 @@ namespace control_notas_cit.Models.Entidades
         public string Descripcion { get; set; }
 
         public virtual Proyecto Proyecto { get; set; }
+
         public virtual List<ApplicationUser> Coordinadores { get; set; }
         public virtual List<Alumno> Alumnos { get; set; }
     }

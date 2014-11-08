@@ -98,17 +98,22 @@ namespace IdentitySample.Controllers
             else
             {
                 ModelState.AddModelError("", "No existe el usuario o la contraseña.");
-                ViewBag.error = true;
-                ViewBag.pwd = true;
                 return View(model);
             }
+        }
+
+        //
+        // GET: /Account/LogOff
+        public ActionResult LogOff()
+        {
+            return LogOff(1);
         }
 
         //
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        public ActionResult LogOff(int var = 0)
         {
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");

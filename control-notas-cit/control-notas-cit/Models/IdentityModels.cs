@@ -41,6 +41,12 @@ namespace IdentitySample.Models
             // This seeds the database with admin user credentials and admin role
             Database.SetInitializer<ApplicationDbContext>(new ApplicationDbInitializer());
         }
+
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<ApplicationUser>().HasOptional(x => x.Celula).WithRequired(x => x.Coordinador).Map(x => x.MapKey("Id"));
+        //    base.OnModelCreating(modelBuilder);
+        //}
         
         public static ApplicationDbContext Create()
         {

@@ -25,6 +25,7 @@ namespace control_notas_cit.Controllers
         private IRepositorioGenerico<Proyecto> repoProyectos = null;
         private IRepositorioGenerico<Calendario> repoCalendarios = null;
         private IRepositorioGenerico<Semana> repoSemanas = null;
+        private IRepositorioGenerico<IdentityRole> repoRoles = null;
 
         public ProfesorController()
         {
@@ -37,6 +38,7 @@ namespace control_notas_cit.Controllers
             this.repoProyectos = new RepositorioGenerico<Proyecto>(AppContext);
             this.repoCalendarios = new RepositorioGenerico<Calendario>(AppContext);
             this.repoSemanas = new RepositorioGenerico<Semana>(AppContext);
+            this.repoRoles = new RepositorioGenerico<IdentityRole>(AppContext);
         }
 
         //
@@ -48,14 +50,19 @@ namespace control_notas_cit.Controllers
             // Obtengo el usuario
             var currentUser = GetCurrentUser();
 
-            if( currentUser == null )
+            if (currentUser == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Logoff", "Account");
+            }
+
+            if(currentUser.Proyecto == null)
+            {
+                return RedirectToAction("Logoff", "Account");
             }
 
             // Utilizo el usuario para obtener los demas datos del modelo de la vista
             model.NombreProfesor = currentUser.Nombre + " " + currentUser.Apellido;
-            model.Proyecto = repoProyectos.SelectAll().Where(p => p.ProyectoID == currentUser.Proyecto.ProyectoID).Single();
+            model.Proyecto = GetCurrentProyecto();
 
             // Calendario será null si la query no devuelve un valor, en el caso de que sea null, la vista mostrara un mensaje
             model.Calendario = repoCalendarios.SelectAll()
@@ -71,7 +78,7 @@ namespace control_notas_cit.Controllers
         {
             List<Semana> semanas = new List<Semana>();
 
-            for (int i = 1; i <= 12; i++ )
+            for (int i = 1; i <= 12; i++)
             {
                 Semana s = new Semana()
                 {
@@ -116,14 +123,14 @@ namespace control_notas_cit.Controllers
 
                 var user = GetCurrentUser();
 
-                if( user == null )
+                if (user == null)
                 {
                     return HttpNotFound("Usuario no encontrado");
                 }
 
                 var proyecto = user.Proyecto;
 
-                if(proyecto == null)
+                if (proyecto == null)
                 {
                     return HttpNotFound("Proyecto no encontrado");
                 }
@@ -231,11 +238,287 @@ namespace control_notas_cit.Controllers
             return View();
         }
 
+        //
+        // GET: /Profesor/Celulas/
+        public ActionResult Celulas()
+        {
+            return View(repoCelulas.SelectAll());
+        }
+
+        //
+        // GET: /Profesor/AgregarCelula/
+        public ActionResult AgregarCelula()
+        {
+            return View(new CelulaViewModel()
+            {
+                Coordinadores = new MultiSelectList(GetCoordinadoresLibresList(), "Value", "Text")
+            });
+        }
+
+        //
+        // POST: /Profesor/AgregarCelula/
+        [HttpPost]
+        public ActionResult AgregarCelula(CelulaViewModel model)
+        {
+            model.Coordinadores = new MultiSelectList(GetCoordinadoresLibresList(), "Value", "Text");
+
+            if (ModelState.IsValid)
+            {
+                List<ApplicationUser> coordinadores = repoUsers.SelectAll().Where(u => model.CoordinadoresID.Contains(u.Id)).ToList();
+
+                Celula celula = new Celula()
+                {
+                    Nombre = model.Nombre,
+                    Descripcion = model.Descripcion,
+                    Coordinadores = coordinadores,
+                    Proyecto = GetCurrentProyecto()
+                };
+
+                repoCelulas.Insert(celula);
+                repoCelulas.Save();
+
+                return RedirectToAction("Celulas");
+            }
+            return View(model);
+        }
+
+        //
+        // GET: /Profesor/EditarCelula/
+
+        //
+        // GET: /Profesor/ListaCoordinadores/
+        public ActionResult ListaCoordinadores()
+        {
+            var model = GetCoordinadores();
+            return View(model);
+        }
+
+        //
+        // GET: /Profesor/AgregarCoordinador/
+        public ActionResult AgregarCoordinador()
+        {
+            return View(new CoordinadorViewModel()
+            {
+                Celulas = new SelectList(repoCelulas.SelectAll().Select(c => c.Nombre).ToList())
+            });
+        }
+
+        //
+        // POST: /Profesor/AgregarCoordinador/
+        [HttpPost]
+        public async Task<ActionResult> AgregarCoordinador(CoordinadorViewModel model)
+        {
+            model.Celulas = new SelectList(repoCelulas.SelectAll().Select(c => c.Nombre).ToList());
+
+            if (ModelState.IsValid)
+            {
+                ApplicationUser coordinador;
+
+                coordinador = new ApplicationUser()
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Nombre = model.Nombre,
+                    Apellido = model.Apellido,
+                    Cedula = model.Cedula,
+                    PhoneNumber = model.Telefono
+                };
+
+                if (model.Celula != null)
+                {
+                    Celula celula = repoCelulas.SelectAll().Where(c => c.Nombre == model.Celula).Single();
+                    coordinador.Celula = celula;
+                }
+
+                var coordinadorResult = await UserManager.CreateAsync(coordinador, model.PasswordHash);
+
+                if (coordinadorResult.Succeeded)
+                {
+                    var roleResult = await UserManager.AddToRoleAsync(coordinador.Id, "Coordinador");
+
+                    if (!roleResult.Succeeded)
+                    {
+                        ModelState.AddModelError("", roleResult.Errors.First());
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", coordinadorResult.Errors.First());
+                    return View(model);
+                }
+
+                return RedirectToAction("ListaCoordinadores");
+            }
+
+            return View(model);
+        }
+
+        //
+        // GET: /Profesor/EditarCoordinador/42
+        public async Task<ActionResult> EditarCoordinador(string id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("ListaCoordinadores");
+            }
+            var coordinador = await UserManager.FindByIdAsync(id);
+            if (coordinador == null)
+            {
+                return RedirectToAction("ListaCoordinadores");
+            }
+
+            var model = new CoordinadorEditViewModel()
+            {
+                Id = coordinador.Id,
+                Nombre = coordinador.Nombre,
+                Apellido = coordinador.Apellido,
+                Email = coordinador.Email,
+                Telefono = coordinador.PhoneNumber,
+                Cedula = coordinador.Cedula
+            };
+
+            if(coordinador.Celula != null)
+            {
+                model.Celulas = new SelectList(repoCelulas.SelectAll(), "CelulaID", "Nombre", coordinador.Celula.CelulaID);
+            }
+            else
+            {
+                model.Celulas = new SelectList(GetCelulasList(), "Value", "Text");
+            }
+
+            return View(model);
+        }
+
+        //
+        // POST: /Profesor/EditarCoordinador/
+        [HttpPost]
+        public async Task<ActionResult> EditarCoordinador(CoordinadorEditViewModel model)
+        {
+            model.Celulas = new SelectList(GetCelulasList(), "Value", "Text");
+
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByIdAsync(model.Id);
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
+
+                user.UserName = model.Email;
+                user.Email = model.Email;
+                user.Nombre = model.Nombre;
+                user.Apellido = model.Apellido;
+                user.Cedula = model.Cedula;
+                user.PhoneNumber = model.Telefono;
+
+                if (model.CelulaID != null)
+                {
+                    user.Celula = repoCelulas.SelectById(Int32.Parse(model.CelulaID));
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Debes elegir una celula");
+                    return View(model);
+                }
+
+                var result = await UserManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", result.Errors.First());
+                    return View(model);
+                }
+                return RedirectToAction("ListaCoordinadores");
+            }
+            ModelState.AddModelError("", "Algo falló.");
+            return View(model);
+        }
+
+        //
+        // POST: /Profesor/BorrarCoordinador/42
+        [HttpPost]
+        public async Task<ActionResult> BorrarCoordinador(string id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("ListaCoordinadores");
+            }
+
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return RedirectToAction("ListaCoordinadores");
+            }
+            var result = await UserManager.DeleteAsync(user);
+
+            return RedirectToAction("ListaCoordinadores");
+        }
+
         // Obtiene el usuario logueado actualmente
         private ApplicationUser GetCurrentUser()
         {
             // Tira una excepcion cuando el explorador ya tiene una sesion iniciada, debido a que al ejecutar el Seed, el id es totalmente distinto
-            return repoUsers.SelectAll().Where(u => u.Id == User.Identity.GetUserId()).Single();
+            return repoUsers.SelectAll().Where(u => u.Id == User.Identity.GetUserId()).SingleOrDefault();
+        }
+
+        private Proyecto GetCurrentProyecto()
+        {
+            return repoProyectos.SelectAll().Where(p => p.ProyectoID == GetCurrentUser().Proyecto.ProyectoID).Single();
+        }
+
+        private string GetCoordinadorRoleID()
+        {
+            return repoRoles.SelectAll().Where(r => r.Name == "Coordinador").Select(s => s.Id).Single();
+        }
+
+        private List<ApplicationUser> GetCoordinadores()
+        {
+            return repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID())).ToList();
+        }
+
+        private List<SelectListItem> GetCelulasList()
+        {
+            List<SelectListItem> items = repoCelulas.SelectAll().Select(c => new SelectListItem() { Value = c.CelulaID.ToString(), Text = c.Nombre }).ToList();
+
+            return items;
+        }
+
+        private List<SelectListItem> GetCoordinadoresList()
+        {
+            List<ApplicationUser> users = repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID())).ToList();
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            foreach (ApplicationUser u in users)
+            {
+                items.Add(new SelectListItem()
+                {
+                    Text = u.Nombre + " " + u.Apellido,
+                    Value = u.Id
+                });
+            }
+
+            return items;
+        }
+
+        private List<SelectListItem> GetCoordinadoresLibresList()
+        {
+            List<ApplicationUser> users = repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID())).ToList();
+
+            List<ApplicationUser> libres = users.Where(x => x.Celula == null).ToList();
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            foreach (ApplicationUser u in libres)
+            {
+                items.Add(new SelectListItem()
+                {
+                    Text = u.Nombre + " " + u.Apellido,
+                    Value = u.Id
+                });
+            }
+
+            return items;
         }
 
         // Estos métodos permiten acceder a la información de los usuarios, aunque también se pueden obtener a través de la tabla Users
@@ -265,5 +548,5 @@ namespace control_notas_cit.Controllers
                 _roleManager = value;
             }
         }
-	}
+    }
 }

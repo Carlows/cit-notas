@@ -50,13 +50,11 @@
                         <fieldset>
                             @if (ViewBag.error == true)
                             {
-                               
+
                                 <div class="container-fluid">
-                                    @if (ViewBag.pwd == true) { 
-                                        <div class="alert alert-block">
-                                             @Html.ValidationSummary(true, "", new { @class = "text-center" })
-                                        </div>       
-                                    }
+                                    <div class="container-fluid">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-center" })
+                                    </div>
                                     <div class="alert alert-block">
                                         @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-center" })
                                     </div>
@@ -65,7 +63,7 @@
                                     </div>
                                 </div>
                             }
-                            
+
                             <div class="input-prepend" title="Username">
                                 <span class="add-on"><i class="halflings-icon user"></i></span>
                                 @Html.TextBoxFor(m => m.Email, new { @class = "input-large span10", placeholder = "Ingresa tu usuario" })
