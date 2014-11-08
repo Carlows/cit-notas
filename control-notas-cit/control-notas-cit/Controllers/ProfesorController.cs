@@ -203,6 +203,12 @@ namespace control_notas_cit.Controllers
         public ActionResult FinalizarSemana(int id)
         {
             Semana model = repoSemanas.SelectById(id);
+
+            if(model == null)
+            {
+                return RedirectToAction("Index");
+            }
+
             return View(model);
         }
 

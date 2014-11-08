@@ -36,7 +36,7 @@ namespace control_notas_cit.Models.ViewModels
         [Required(ErrorMessage="El telefono es requerido.")]
         public string Telefono { get; set; }
 
-        public string Proyecto { get; set; }
+        public int? ProyectoID { get; set; }
 
         public SelectList Proyectos { get; set; }
     }
@@ -56,7 +56,7 @@ namespace control_notas_cit.Models.ViewModels
         [Required(ErrorMessage = "El telefono es requerido.")]
         public string Telefono { get; set; }
 
-        public string Proyecto { get; set; }
+        public int? ProyectoID { get; set; }
 
         public SelectList Proyectos { get; set; }
     }

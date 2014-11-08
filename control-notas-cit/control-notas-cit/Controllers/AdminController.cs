@@ -15,7 +15,7 @@ using Microsoft.Owin;
 
 namespace control_notas_cit.Controllers
 {
-    [Authorize(Roles="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private ApplicationDbContext AppContext;
@@ -50,11 +50,11 @@ namespace control_notas_cit.Controllers
             List<ApplicationUser> users = repoUsers.SelectAll().Where(x => x.Roles.Select(y => y.RoleId).Contains(profesor_rol_id)).ToList();
             List<string> nombres = new List<string>();
 
-            foreach( ApplicationUser u in users )
+            foreach (ApplicationUser u in users)
             {
                 nombres.Add(string.Concat(u.Nombre + " " + u.Apellido));
             }
-            
+
             return View(new ProjectViewModel
             {
                 Profesores = nombres
@@ -66,11 +66,11 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public ActionResult Crear(ProjectViewModel model)
         {
-            if( ModelState.IsValid )
+            if (ModelState.IsValid)
             {
                 List<ApplicationUser> profesores = (from u in repoUsers.SelectAll()
-                                                   where model.Profesores.Contains(string.Concat(u.Nombre, " ", u.Apellido))
-                                                   select u).ToList();
+                                                    where model.Profesores.Contains(string.Concat(u.Nombre, " ", u.Apellido))
+                                                    select u).ToList();
                 Proyecto p = new Proyecto()
                 {
                     Nombre = model.Nombre,
@@ -100,9 +100,9 @@ namespace control_notas_cit.Controllers
         // GET: /Admin/AgregarProfesor/
         public ActionResult AgregarProfesor()
         {
-            return View(new ProfesorViewModel() 
+            return View(new ProfesorViewModel()
             {
-                Proyectos = new SelectList(repoProyectos.SelectAll().Select(p => p.Nombre).ToList())
+                Proyectos = new SelectList(GetProyectosList(), "Value", "Text")
             });
         }
 
@@ -111,47 +111,33 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public async Task<ActionResult> AgregarProfesor(ProfesorViewModel model)
         {
-            model.Proyectos = new SelectList(repoProyectos.SelectAll().Select(p => p.Nombre).ToList());
+            model.Proyectos = new SelectList(GetProyectosList(), "Value", "Text");
 
-            if( ModelState.IsValid )
+            if (ModelState.IsValid)
             {
-                ApplicationUser profesor;
-
-                if (model.Proyecto != null)
+                ApplicationUser profesor = new ApplicationUser()
                 {
-                    Proyecto p = AppContext.Proyectos.AsNoTracking().Where(z => z.Nombre == model.Proyecto).Single();
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Nombre = model.Nombre,
+                    Apellido = model.Apellido,
+                    Cedula = model.Cedula,
+                    PhoneNumber = model.Telefono
+                };
 
-                    profesor = new ApplicationUser
-                    {
-                        UserName = model.Email,
-                        Email = model.Email,
-                        Nombre = model.Nombre,
-                        Apellido = model.Apellido,
-                        Cedula = model.Cedula,
-                        PhoneNumber = model.Telefono,
-                        Proyecto = p
-                    };
-                }
-                else
+                if (model.ProyectoID != null)
                 {
-                    profesor = new ApplicationUser
-                    {
-                        UserName = model.Email,
-                        Email = model.Email,
-                        Nombre = model.Nombre,
-                        Apellido = model.Apellido,
-                        Cedula = model.Cedula,
-                        PhoneNumber = model.Telefono
-                    };
+                    Proyecto p = repoProyectos.SelectAll().Where(pr => pr.ProyectoID == model.ProyectoID).Single();
+                    profesor.Proyecto = p;
                 }
 
                 var profesorResult = await UserManager.CreateAsync(profesor, model.PasswordHash);
 
-                if( profesorResult.Succeeded )
+                if (profesorResult.Succeeded)
                 {
                     var roleResult = await UserManager.AddToRoleAsync(profesor.Id, "Profesor");
 
-                    if( !roleResult.Succeeded )
+                    if (!roleResult.Succeeded)
                     {
                         ModelState.AddModelError("", roleResult.Errors.First());
                         return View(model);
@@ -183,32 +169,26 @@ namespace control_notas_cit.Controllers
                 return RedirectToAction("ListaProfesores");
             }
 
+            var model = new ProfesorEditViewModel()
+            {
+                Id = profesor.Id,
+                Nombre = profesor.Nombre,
+                Apellido = profesor.Apellido,
+                Email = profesor.Email,
+                Telefono = profesor.PhoneNumber,
+                Cedula = profesor.Cedula
+            };
+
             if (profesor.Proyecto != null)
             {
-                return View(new ProfesorEditViewModel()
-                {
-                    Id = profesor.Id,
-                    Nombre = profesor.Nombre,
-                    Apellido = profesor.Apellido,
-                    Email = profesor.Email,
-                    Telefono = profesor.PhoneNumber,
-                    Cedula = profesor.Cedula,
-                    Proyectos = new SelectList(repoProyectos.SelectAll().Select(p => p.Nombre).ToList(), profesor.Proyecto.Nombre)
-                });
+                model.Proyectos = new SelectList(GetProyectosList(), "Value", "Text", profesor.Proyecto.ProyectoID);
             }
             else
             {
-                return View(new ProfesorEditViewModel()
-                {
-                    Id = profesor.Id,
-                    Nombre = profesor.Nombre,
-                    Apellido = profesor.Apellido,
-                    Email = profesor.Email,
-                    Telefono = profesor.PhoneNumber,
-                    Cedula = profesor.Cedula,
-                    Proyectos = new SelectList(repoProyectos.SelectAll().Select(p => p.Nombre).ToList())
-                });
+                model.Proyectos = new SelectList(GetProyectosList(), "Value", "Text");
             }
+
+            return View(model);
         }
 
         //
@@ -216,7 +196,7 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public async Task<ActionResult> EditarProfesor(ProfesorEditViewModel model)
         {
-            model.Proyectos = new SelectList(repoProyectos.SelectAll().Select(p => p.Nombre).ToList());
+            model.Proyectos = new SelectList(GetProyectosList(), "Value", "Text");
 
             if (ModelState.IsValid)
             {
@@ -233,9 +213,9 @@ namespace control_notas_cit.Controllers
                 user.Cedula = model.Cedula;
                 user.PhoneNumber = model.Telefono;
 
-                if( model.Proyecto != null )
+                if (model.ProyectoID != null)
                 {
-                    user.Proyecto = AppContext.Proyectos.Where(p => p.Nombre == model.Proyecto).Single();
+                    user.Proyecto = repoProyectos.SelectAll().Where(p => p.ProyectoID == model.ProyectoID).Single();
                 }
                 else
                 {
@@ -276,6 +256,19 @@ namespace control_notas_cit.Controllers
         }
 
 
+        private List<SelectListItem> GetProyectosList()
+        {
+            List<SelectListItem> proyectos = repoProyectos.SelectAll()
+                .Select(p => new SelectListItem()
+                {
+                    Value = p.ProyectoID.ToString(),
+                    Text = p.Nombre
+                })
+                .ToList();
+
+            return proyectos;
+        }
+
         // Estos métodos permiten acceder a la información de los usuarios, aunque también se pueden obtener a través de la tabla Users
         // Sin embargo, UserManager y RoleManager tienen métodos asincronicos mucho más optimizados
         private ApplicationUserManager _userManager;
@@ -303,5 +296,5 @@ namespace control_notas_cit.Controllers
                 _roleManager = value;
             }
         }
-	}
+    }
 }
