@@ -95,6 +95,8 @@ http://prntscr.com/5261vo
 ###TO-DOs
 
 - Definir claramente las ideas principales de la aplicación (Manejo de notas, asistencia y minutas).
+- El profesor puede agregar un nuevo profesor al proyecto.
+- Puede agregar, editar y borrar alumnos de su celula.
 
 
 #### Done
@@ -103,6 +105,14 @@ http://prntscr.com/5261vo
 - Diseño básico de la interfaz (podría ser mejorada luego).
 - Controladores Administrador, Profesor, Coordinador, al usuario loguearse, este es redireccionado hacia el controlador segun su rol.
 - Log-in.
+***El profesor debe poder editar la informacion del proyecto.
+***El profesor debe poder editar las celulas creadas.
+***El admin debe poder editar los proyectos creados.
+
+- Coordinador
+***Entra y encuentra informacion de su celula en el inicio.
+***El coordinador puede editar la informacion de su celula.
+***Encuentra tambien en el inicio la semana actual en la que se encuentra el calendario del proyecto, se muestra la informacion de la semana.
 
 ----------------------------------------------------------------------------------
 
