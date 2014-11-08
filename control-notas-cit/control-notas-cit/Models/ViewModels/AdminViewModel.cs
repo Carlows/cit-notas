@@ -18,6 +18,16 @@ namespace control_notas_cit.Models.ViewModels
         public IEnumerable<string> Profesores { get; set; }
     }
 
+    public class ProjectEditViewModel
+    {
+        public int Id { get; set; }
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        public string Nombre { get; set; }
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        [DataType(DataType.MultilineText)]
+        public string Descripcion { get; set; }
+    }
+
     public class ProfesorViewModel
     {
         public string Id { get; set; }

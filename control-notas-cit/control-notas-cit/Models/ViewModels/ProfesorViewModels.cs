@@ -15,7 +15,7 @@ namespace control_notas_cit.Models.ViewModels
         public Proyecto Proyecto { get; set; }
         public Calendario Calendario { get; set; }
     }
-
+    
     public class CalendarioViewModel
     {
         [Required]
@@ -53,6 +53,16 @@ namespace control_notas_cit.Models.ViewModels
         public List<string> CoordinadoresID { get; set; }
 
         public MultiSelectList Coordinadores { get; set; }
+    }
+
+    public class CelulaEditViewModel
+    {
+        public int Id { get; set; }
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        public string Nombre { get; set; }
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        [DataType(DataType.MultilineText)]
+        public string Descripcion { get; set; }
     }
 
     public class CoordinadorViewModel

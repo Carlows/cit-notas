@@ -1,11 +1,14 @@
 ﻿@model control_notas_cit.Models.Entidades.Proyecto
-
+@using control_notas_cit.Helpers
 <div class="box-header">
-    <h2>@Model.Nombre</h2>
-       
+    <h2>@Html.TruncateText(@Model.Nombre, 50)</h2>       
 </div>
 
 <div class="box-content">
     @Model.Nombre <br />
     @Model.Descripcion <br />
+
+    <div class="clearfix">
+        @Html.ActionLink("Editar", "EditarProyecto", "Admin", new { id = @Model.ProyectoID }, new { @class = "btn btn-primary pull-right" })
+    </div>
 </div>

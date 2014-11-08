@@ -87,6 +87,56 @@ namespace control_notas_cit.Controllers
 
         //
         // GET: /Admin/EditarProyecto/
+        public ActionResult EditarProyecto(int? id)
+        {
+            if(id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var proyecto = repoProyectos.SelectById(id);
+
+            if( proyecto == null )
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = new ProjectEditViewModel()
+            {
+                Id = proyecto.ProyectoID,
+                Nombre = proyecto.Nombre,
+                Descripcion = proyecto.Descripcion
+            };
+
+            return View(model);
+        }
+
+        //
+        // POST: /Admin/EditarProyecto/
+        [HttpPost]
+        public ActionResult EditarProyecto(ProjectEditViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var proyecto = repoProyectos.SelectById(model.Id);
+
+                if(proyecto == null)
+                {
+                    ModelState.AddModelError("", "No se pudo encontrar el proyecto");
+                    return View(model);
+                }
+
+                proyecto.Nombre = model.Nombre;
+                proyecto.Descripcion = model.Descripcion;
+
+                repoProyectos.Update(proyecto);
+                repoProyectos.Save();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
 
         //
         // GET: /Admin/ListaProfesores/

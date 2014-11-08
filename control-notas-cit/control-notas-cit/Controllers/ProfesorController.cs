@@ -73,6 +73,55 @@ namespace control_notas_cit.Controllers
         }
 
         //
+        // GET: /Profesor/EditarProyecto/
+        //
+        public ActionResult EditarProyecto()
+        {
+            var proyecto = GetCurrentProyecto();
+
+            if (proyecto == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = new ProjectEditViewModel()
+            {
+                Id = proyecto.ProyectoID,
+                Nombre = proyecto.Nombre,
+                Descripcion = proyecto.Descripcion
+            };
+
+            return View(model);
+        }
+
+        //
+        // POST: /Profesor/EditarProyecto/
+        [HttpPost]
+        public ActionResult EditarProyecto(ProjectEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var proyecto = repoProyectos.SelectById(model.Id);
+
+                if (proyecto == null)
+                {
+                    ModelState.AddModelError("", "No se pudo encontrar el proyecto");
+                    return View(model);
+                }
+
+                proyecto.Nombre = model.Nombre;
+                proyecto.Descripcion = model.Descripcion;
+
+                repoProyectos.Update(proyecto);
+                repoProyectos.Save();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+        //
         // GET: /Profesor/AgregarCalendario/
         public ActionResult AgregarCalendario()
         {
@@ -290,6 +339,56 @@ namespace control_notas_cit.Controllers
 
         //
         // GET: /Profesor/EditarCelula/
+        public ActionResult EditarCelula(int? id)
+        {
+            if(id == null)
+            {
+                return RedirectToAction("Celulas");
+            }
+
+            var celula = repoCelulas.SelectById(id);
+
+            if(celula == null)
+            {
+                return RedirectToAction("Celulas");
+            }
+
+            var model = new CelulaEditViewModel()
+            {
+                Id = celula.CelulaID,
+                Nombre = celula.Nombre,
+                Descripcion = celula.Descripcion
+            };
+
+            return View(model);
+        }
+
+        //
+        // POST: /Profesor/EditarCelula/
+        [HttpPost]
+        public ActionResult EditarCelula(CelulaEditViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var celula = repoCelulas.SelectById(model.Id);
+
+                if(celula == null)
+                {
+                    ModelState.AddModelError("", "No se pudo encontrar la celula");
+                    return View(model);
+                }
+
+                celula.Nombre = model.Nombre;
+                celula.Descripcion = model.Descripcion;
+
+                repoCelulas.Update(celula);
+                repoCelulas.Save();
+
+                return RedirectToAction("Celulas");
+            }
+
+            return View(model);
+        }
 
         //
         // GET: /Profesor/ListaCoordinadores/

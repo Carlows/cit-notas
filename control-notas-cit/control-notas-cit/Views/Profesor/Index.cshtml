@@ -71,7 +71,7 @@
         <div class="box-header" data-original-title="">
             <h2>@Model.Proyecto.Nombre</h2>
         </div>
-        <div class="box-content">
+        <div class="box-content editar-proyecto">
             <div class="page-header">
                 <h2>@Model.Proyecto.Nombre</h2>
             </div>
@@ -90,6 +90,8 @@
                     <p>@Model.Proyecto.Descripcion</p>
                 </div>
             </div>
+            
+            @Html.ActionLink("Editar datos del proyecto", "EditarProyecto", null, new { @class = "btn btn-primary btn-block editar-proyecto-link", style = "display: none;" })
         </div>
     </div> 
 </div>
@@ -98,6 +100,8 @@
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
+
+            // Efecto para mostrar las semanas del calendario
             $(".caja").each(function () {
                 var $caja = $(this);
 
@@ -106,6 +110,13 @@
                     $div.slideToggle();
                     $(".cajacontent").not($div).slideUp();
                 });
+            });
+
+            // Efecto para el boton de editar proyecto
+            $(document).on('mouseenter', '.editar-proyecto', function () {
+                $(this).find(".editar-proyecto-link").slideDown("fast");
+            }).on('mouseleave', '.editar-proyecto', function () {
+                $(this).find(".editar-proyecto-link").slideUp("fast");
             });
         });
     </script>

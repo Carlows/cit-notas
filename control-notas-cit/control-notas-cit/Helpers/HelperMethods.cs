@@ -22,5 +22,15 @@ namespace control_notas_cit.Helpers
 
             return new MvcHtmlString(controller == currentController && action == currentAction ? cssClass : String.Empty);
         }
+
+        public static MvcHtmlString TruncateText(this HtmlHelper html, string texto, int length)
+        {
+            if(texto.Length > length)
+            {
+                texto = texto.Substring(0, length) + "...";
+            }
+
+            return new MvcHtmlString(texto);
+        }
     }
 }
