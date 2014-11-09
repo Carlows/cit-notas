@@ -12,4 +12,20 @@ namespace control_notas_cit.Models.ViewModels
         public Celula Celula { get; set; }
         public Semana Semana { get; set; }
     }
+
+    public class AlumnoViewModel
+    {
+        public int Id { get; set; }
+        [Required(ErrorMessage="Este campo es obligatorio")]
+        public string Nombre { get; set; }
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        public string Apellido { get; set; }
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        public string Cedula { get; set; }
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        public string Telefono { get; set; }
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
 }

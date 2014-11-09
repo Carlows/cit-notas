@@ -23,6 +23,7 @@ namespace control_notas_cit.Controllers
         private IRepositorioGenerico<Calendario> repoCalendarios = null;
         private IRepositorioGenerico<Semana> repoSemanas = null;
         private IRepositorioGenerico<IdentityRole> repoRoles = null;
+        private IRepositorioGenerico<Alumno> repoAlumnos = null;
 
         public CoordinadorController()
         {
@@ -36,6 +37,7 @@ namespace control_notas_cit.Controllers
             this.repoCalendarios = new RepositorioGenerico<Calendario>(AppContext);
             this.repoSemanas = new RepositorioGenerico<Semana>(AppContext);
             this.repoRoles = new RepositorioGenerico<IdentityRole>(AppContext);
+            this.repoAlumnos = new RepositorioGenerico<Alumno>(AppContext);
         }
 
         //
@@ -108,6 +110,122 @@ namespace control_notas_cit.Controllers
             }
 
             return View(model);
+        }
+
+        //
+        // GET: /Coordinador/ListaAlumnos/
+        public ActionResult ListaAlumnos()
+        {
+            var model = repoAlumnos.SelectAll().Where(a => a.Celula.CelulaID == GetCurrentCelula().CelulaID).ToList();
+
+            return View(model);
+        }
+
+        //
+        // GET: /Coordinador/AgregarAlumno/
+        public ActionResult AgregarAlumno()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Coordinador/AgregarAlumno/
+        [HttpPost]
+        public ActionResult AgregarAlumno(AlumnoViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                Alumno alumno = new Alumno()
+                {
+                    Nombre = model.Nombre,
+                    Apellido = model.Apellido,
+                    Cedula = model.Cedula,
+                    Telefono = model.Telefono,
+                    Email = model.Email,
+                    Celula = GetCurrentCelula()
+                };
+
+                repoAlumnos.Insert(alumno);
+                repoAlumnos.Save();
+
+                return RedirectToAction("ListaAlumnos");
+            }
+
+            return View(model);
+        }
+
+        //
+        // GET: /Coordinador/EditarAlumno/1
+        public ActionResult EditarAlumno(int? id)
+        {
+            if(id == null)
+            {
+                return RedirectToAction("ListaAlumnos");
+            }
+
+            var alumno = repoAlumnos.SelectById(id);
+
+            if (alumno == null)
+            {
+                return RedirectToAction("ListaAlumnos");
+            }
+
+            var model = new AlumnoViewModel()
+            {
+                Id = alumno.AlumnoID,
+                Nombre = alumno.Nombre,
+                Apellido = alumno.Apellido,
+                Telefono = alumno.Telefono,
+                Cedula = alumno.Cedula,
+                Email = alumno.Email
+            };
+
+            return View(model);
+        }
+
+        //
+        // POST: /Coordinador/EditarAlumno/
+        [HttpPost]
+        public ActionResult EditarAlumno(AlumnoViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                Alumno alumno = repoAlumnos.SelectById(model.Id);
+
+                if(alumno == null)
+                {
+                    ModelState.AddModelError("", "No se pudo encontrar el alumno");
+                    return View(model);
+                }
+
+                alumno.Nombre = model.Nombre;
+                alumno.Apellido = model.Apellido;
+                alumno.Cedula = model.Cedula;
+                alumno.Telefono = model.Telefono;
+                alumno.Email = model.Email;
+
+                repoAlumnos.Update(alumno);
+                repoAlumnos.Save();
+
+                return RedirectToAction("ListaAlumnos");
+            }
+
+            return View(model);
+        }
+
+        // POST: /Coordinador/BorrarAlumno/1
+        [HttpPost]
+        public ActionResult BorrarAlumno(int? id)
+        {
+            if(id == null)
+            {
+                return RedirectToAction("ListaAlumnos");
+            }
+
+            repoAlumnos.Delete(id);
+            repoAlumnos.Save();
+
+            return RedirectToAction("ListaAlumnos");
         }
 
         // Obtiene el usuario logueado actualmente

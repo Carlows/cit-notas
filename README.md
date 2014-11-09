@@ -94,9 +94,11 @@ http://prntscr.com/5261vo
 
 ###TO-DOs
 
-- Definir claramente las ideas principales de la aplicación (Manejo de notas, asistencia y minutas).
 - El profesor puede agregar un nuevo profesor al proyecto.
-- Puede agregar, editar y borrar alumnos de su celula.
+- El coordinador puede subir minutas a la semana.
+- El profesor puede revisar la lista de minutas enviadas en la semana.
+- El profesor puede aprobar estas minutas.
+- Se le muestran al profesor una lista de minutas pendientes por aprobar antes de terminar la semana.
 
 
 #### Done
@@ -112,6 +114,7 @@ http://prntscr.com/5261vo
 - El coordinador Entra y encuentra informacion de su celula en el inicio.
 - El coordinador puede editar la informacion de su celula.
 - El coordinador encuentra tambien en el inicio la semana actual en la que se encuentra el calendario del proyecto, se muestra la informacion de la semana.
+- Puede agregar, editar y borrar alumnos de su celula.
 
 ----------------------------------------------------------------------------------
 

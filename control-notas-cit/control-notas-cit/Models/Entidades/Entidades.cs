@@ -57,6 +57,7 @@ namespace control_notas_cit.Models.Entidades
         public string Apellido { get; set; }
         public string Cedula { get; set; }
         public string Telefono { get; set; }
+        public string Email { get; set; }
 
         public virtual Celula Celula { get; set; }
         public virtual Nota Nota { get; set; }
