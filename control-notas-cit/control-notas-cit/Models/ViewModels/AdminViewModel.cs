@@ -45,7 +45,7 @@ namespace control_notas_cit.Models.ViewModels
         public string PasswordHash { get; set; }
         [Required(ErrorMessage="El telefono es requerido.")]
         public string Telefono { get; set; }
-
+        [Display(Name="Proyecto")]
         public int? ProyectoID { get; set; }
 
         public SelectList Proyectos { get; set; }
@@ -65,7 +65,7 @@ namespace control_notas_cit.Models.ViewModels
         public string Cedula { get; set; }
         [Required(ErrorMessage = "El telefono es requerido.")]
         public string Telefono { get; set; }
-
+        [Display(Name="Proyecto")]
         public int? ProyectoID { get; set; }
 
         public SelectList Proyectos { get; set; }

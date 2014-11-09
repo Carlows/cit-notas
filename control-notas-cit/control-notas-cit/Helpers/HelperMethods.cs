@@ -25,6 +25,11 @@ namespace control_notas_cit.Helpers
 
         public static MvcHtmlString TruncateText(this HtmlHelper html, string texto, int length)
         {
+            if(texto == null)
+            {
+                return new MvcHtmlString(String.Empty);
+            }
+
             if(texto.Length > length)
             {
                 texto = texto.Substring(0, length) + "...";

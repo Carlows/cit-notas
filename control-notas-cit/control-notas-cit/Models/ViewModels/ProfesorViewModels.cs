@@ -102,7 +102,7 @@ namespace control_notas_cit.Models.ViewModels
         public string Cedula { get; set; }
         [Required(ErrorMessage = "El telefono es requerido.")]
         public string Telefono { get; set; }
-
+        [Display(Name="Celula")]
         public string CelulaID { get; set; }
 
         public SelectList Celulas { get; set; }
