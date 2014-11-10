@@ -25,17 +25,43 @@ namespace control_notas_cit.Helpers
 
         public static MvcHtmlString TruncateText(this HtmlHelper html, string texto, int length)
         {
-            if(texto == null)
+            if (texto == null)
             {
                 return new MvcHtmlString(String.Empty);
             }
 
-            if(texto.Length > length)
+            if (texto.Length > length)
             {
                 texto = texto.Substring(0, length) + "...";
             }
 
             return new MvcHtmlString(texto);
+        }
+
+        public static MvcHtmlString GridBoxesOpen(this HtmlHelper html, int counter)
+        {
+            String output = null;
+            if (counter == 0)
+            {
+                output = String.Format("<div class='row-fluid'>");
+            }
+            else if (counter > 0 && counter % 2 == 0)
+            {
+                output = String.Format("</div><div class=\"row-fluid\">");
+            }
+
+            return new MvcHtmlString(output);
+        }
+
+        public static MvcHtmlString GridBoxesClose(this HtmlHelper html, int counter, int length)
+        {
+            String output = null;
+            if(counter == (length - 1))
+            {
+               output = String.Format("</div>");
+            }
+
+            return new MvcHtmlString(output);
         }
     }
 }

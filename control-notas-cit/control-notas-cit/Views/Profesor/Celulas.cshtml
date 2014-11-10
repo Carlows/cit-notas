@@ -1,6 +1,6 @@
 ﻿@model IList<control_notas_cit.Models.Entidades.Celula>
 @using control_notas_cit.Models.Entidades
-
+@using control_notas_cit.Helpers
 @{
     ViewBag.Title = "Celulas";
     ViewBag.Seccion = "Profesor";
@@ -27,19 +27,14 @@ else
         foreach (Celula c in @Model)
         {
 
-            if (counter == 0)
-            {
-                @Html.Raw("<div class=\"row-fluid\">")
-            }
-            else if (counter > 0 && counter % 2 == 0)
-            {
-                @Html.Raw("</div><div class=\"row-fluid\">")
-            }
+            @Html.GridBoxesOpen(counter)
 
             <div class="box span6">
                 @Html.Partial("_CelulaPartialView", c)
             </div>
 
+            @Html.GridBoxesClose(counter, @Model.Count)
+            
             counter++;
         }
         
