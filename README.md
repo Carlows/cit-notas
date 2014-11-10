@@ -94,7 +94,6 @@ http://prntscr.com/5261vo
 
 ###TO-DOs
 
-- Resetear los estilos de <pre> en bootstrap y añadir ese elemento en la aplicacion
 - El profesor puede agregar un nuevo profesor al proyecto.
 - El profesor puede aprobar estas minutas.
 - Se le muestran al profesor una lista de minutas pendientes por aprobar antes de terminar la semana.
@@ -116,6 +115,7 @@ http://prntscr.com/5261vo
 - Puede agregar, editar y borrar alumnos de su celula.
 - El coordinador puede subir minutas a la semana.
 - El profesor puede revisar la lista de minutas enviadas en la semana.
+- Resetear los estilos del elemento \<pre\>
 
 ----------------------------------------------------------------------------------
 
