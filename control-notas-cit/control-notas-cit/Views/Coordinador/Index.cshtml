@@ -27,7 +27,20 @@
                 <p>@Model.Semana.Descripcion</p>
                 
                 <h3>Actividad a realizar</h3>
-                <p>@Model.Semana.Actividad</p>                
+                <p>@Model.Semana.Actividad</p>
+
+                if(Model.MinutaSemana == null)
+                { 
+                    <div class="clearfix">
+                        @Html.ActionLink("Agregar minuta", "AgregarMinuta", null, new { @class = "btn btn-primaty pull-right" })
+                    </div>
+                }
+                else
+                {
+                    <div class="clearfix">
+                        @Html.ActionLink("Editar minuta", "AgregarMinuta", null, new { @class = "btn btn-primaty pull-right" })
+                    </div>
+                }
             }
             else
             {

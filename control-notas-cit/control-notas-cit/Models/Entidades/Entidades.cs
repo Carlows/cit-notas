@@ -47,6 +47,7 @@ namespace control_notas_cit.Models.Entidades
 
         public virtual List<ApplicationUser> Coordinadores { get; set; }
         public virtual List<Alumno> Alumnos { get; set; }
+        public virtual List<Minuta> Minutas { get; set; }
     }
 
     public class Alumno

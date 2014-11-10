@@ -38,8 +38,9 @@
                                 <h4>Actividad a realizar</h4>
                                 <p>@s.Actividad</p>
 
-                                <a href="@Url.Action("EditarSemana", new { id = s.SemanaID })" class="btn btn-primary pull-right">Editar</a>
-                                <a href="@Url.Action("FinalizarSemana", new { id = s.SemanaID })" class="btn btn-danger pull-right" style="margin-right:8px;">Finalizar</a>
+                                <a href="@Url.Action("FinalizarSemana", new { id = s.SemanaID })" class="btn btn-danger pull-right">Finalizar</a>
+                                <a href="@Url.Action("EditarSemana", new { id = s.SemanaID })" class="btn btn-primary pull-right" style="margin-right:8px;">Editar</a>
+                                <a href="@Url.Action("MinutasSemana", new { id = s.SemanaID })" class="btn btn-primary pull-right" style="margin-right:8px;">Ver Minutas</a>
                             </div>
                         </div>
                     }
@@ -57,6 +58,7 @@
                                 <p>@s.Actividad</p>
 
                                 <a href="@Url.Action("EditarSemana", new { id = s.SemanaID })" class="btn pull-right">Editar</a>
+                                <a href="@Url.Action("MinutasSemana", new { id = s.SemanaID })" class="btn pull-right" style="margin-right:8px;">Ver Minutas</a>
                             </div>
                         </div>
                     }

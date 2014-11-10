@@ -1,0 +1,8 @@
+﻿@model control_notas_cit.Models.Entidades.Minuta
+@using control_notas_cit.Helpers
+<div class="box-header">
+    <h2>@Html.TruncateText(@Model.Celula.Nombre, 50)</h2> <label class="text-right">@Model.Fecha</label>
+</div>
+<div class="box-content">
+    <pre>@Model.Contenido</pre>
+</div>

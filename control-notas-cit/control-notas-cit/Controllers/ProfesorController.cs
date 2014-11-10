@@ -559,6 +559,26 @@ namespace control_notas_cit.Controllers
             return RedirectToAction("ListaCoordinadores");
         }
 
+        //
+        // GET: /Profesor/MinutasSemana/1
+        public ActionResult MinutasSemana(int? id)
+        {
+            if(id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var semana = repoSemanas.SelectById(id);
+
+            if(semana == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = GetCurrentProyecto().Celulas.SelectMany(c => c.Minutas.Where(m => m.Semana.SemanaID == semana.SemanaID)).ToList();
+
+            return View(model);
+        }
+
         // Obtiene el usuario logueado actualmente
         private ApplicationUser GetCurrentUser()
         {

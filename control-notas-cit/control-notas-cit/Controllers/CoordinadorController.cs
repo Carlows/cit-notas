@@ -24,6 +24,7 @@ namespace control_notas_cit.Controllers
         private IRepositorioGenerico<Semana> repoSemanas = null;
         private IRepositorioGenerico<IdentityRole> repoRoles = null;
         private IRepositorioGenerico<Alumno> repoAlumnos = null;
+        private IRepositorioGenerico<Minuta> repoMinutas = null;
 
         public CoordinadorController()
         {
@@ -38,6 +39,7 @@ namespace control_notas_cit.Controllers
             this.repoSemanas = new RepositorioGenerico<Semana>(AppContext);
             this.repoRoles = new RepositorioGenerico<IdentityRole>(AppContext);
             this.repoAlumnos = new RepositorioGenerico<Alumno>(AppContext);
+            this.repoMinutas = new RepositorioGenerico<Minuta>(AppContext);
         }
 
         //
@@ -60,6 +62,7 @@ namespace control_notas_cit.Controllers
 
             model.Celula = GetCurrentCelula();
             model.Semana = GetCurrentSemana();
+            model.MinutaSemana = GetCurrentMinuta();
 
             return View(model);
         }
@@ -228,6 +231,70 @@ namespace control_notas_cit.Controllers
             return RedirectToAction("ListaAlumnos");
         }
 
+        //
+        // GET: /Coordinador/AgregarMinuta/
+        public ActionResult AgregarMinuta()
+        {
+            if(GetCurrentSemana() == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var minutaActual = GetCurrentMinuta();
+            if (minutaActual != null)
+            {
+                return View(new MinutaCelulaViewModel()
+                {
+                    Id = minutaActual.MinutaID,
+                    Contenido = minutaActual.Contenido
+                });
+            }
+
+            return View(new MinutaCelulaViewModel());
+        }
+
+        //
+        // POST: /Coordinador/AgregarMinuta/
+        [HttpPost]
+        public ActionResult AgregarMinuta(MinutaCelulaViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var celula = GetCurrentCelula();
+                var semana = GetCurrentSemana();
+
+                if(celula == null || semana == null)
+                {
+                    ModelState.AddModelError("", "No se pudo encontrar la celula o la semana");
+                    return View(model);
+                }
+
+                Minuta minuta = new Minuta()
+                {
+                    Contenido = model.Contenido,
+                    Celula = celula,
+                    Semana = semana
+                };
+
+                if (model.Id == 0)
+                {
+                    repoMinutas.Insert(minuta);
+                    repoMinutas.Save();                    
+                }
+                else
+                {
+                    minuta.MinutaID = model.Id;
+
+                    repoMinutas.Update(minuta);
+                    repoMinutas.Save();
+                }
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
         // Obtiene el usuario logueado actualmente
         private ApplicationUser GetCurrentUser()
         {
@@ -254,6 +321,12 @@ namespace control_notas_cit.Controllers
                 return null;
 
             return repoSemanas.SelectAll().Where(s => s.SemanaID == GetCurrentCalendario().SemanaActualID).SingleOrDefault();
+        }
+
+        // Obtiene la minuta actual o devuelve null si no existe calendario aun
+        private Minuta GetCurrentMinuta()
+        {
+            return repoMinutas.SelectAll().Where(m => m.Semana.SemanaID == GetCurrentSemana().SemanaID).SingleOrDefault();
         }
 	}
 }

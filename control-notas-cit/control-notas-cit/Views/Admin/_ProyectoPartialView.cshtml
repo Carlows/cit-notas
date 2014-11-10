@@ -6,7 +6,9 @@
 
 <div class="box-content">
     @Model.Nombre <br />
-    @Model.Descripcion <br />
+    <div class="container-fluid">
+        <pre>@Model.Descripcion</pre>
+    </div>
 
     <div class="clearfix">
         @Html.ActionLink("Editar", "EditarProyecto", "Admin", new { id = @Model.ProyectoID }, new { @class = "btn btn-primary pull-right" })
