@@ -6,8 +6,11 @@
 </div>
 
 <div class="box-content">
-    Coordinadores <br />
-    @Model.Descripcion <br />
+    <h3>@Model.Nombre</h3>
+
+    <div class="container-fluid">
+        <pre>@Model.Descripcion</pre>
+    </div>
 
     <div class="clearfix">
         @Html.ActionLink("Editar", "EditarCelula", "Profesor", new { id = @Model.CelulaID }, new { @class = "btn btn-primary pull-right" })

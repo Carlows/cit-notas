@@ -50,6 +50,7 @@ namespace control_notas_cit.Models.ViewModels
         [DataType(DataType.MultilineText)]
         public string Descripcion { get; set; }
         [Required(ErrorMessage = "Este campo es obligatorio")]
+        [Display(Name="Coordinadores")]
         public List<string> CoordinadoresID { get; set; }
 
         public MultiSelectList Coordinadores { get; set; }

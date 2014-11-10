@@ -33,10 +33,10 @@
                             </div>
                             <div class="box-content cajacontent clearfix" style="">
                                 <h4>Descripcion de la semana</h4>
-                                <p>@s.Descripcion</p>
+                                <pre>@s.Descripcion</pre>
 
                                 <h4>Actividad a realizar</h4>
-                                <p>@s.Actividad</p>
+                                <pre>@s.Actividad</pre>
 
                                 <a href="@Url.Action("FinalizarSemana", new { id = s.SemanaID })" class="btn btn-danger pull-right">Finalizar</a>
                                 <a href="@Url.Action("EditarSemana", new { id = s.SemanaID })" class="btn btn-primary pull-right" style="margin-right:8px;">Editar</a>
@@ -52,10 +52,10 @@
                             </div>
                             <div class="box-content cajacontent clearfix" style="display:none;">
                                 <h4>Descripcion de la semana</h4>
-                                <p>@s.Descripcion</p>
+                                <pre>@s.Descripcion</pre>
 
                                 <h4>Actividad a realizar</h4>
-                                <p>@s.Actividad</p>
+                                <pre>@s.Actividad</pre>
 
                                 <a href="@Url.Action("EditarSemana", new { id = s.SemanaID })" class="btn pull-right">Editar</a>
                                 <a href="@Url.Action("MinutasSemana", new { id = s.SemanaID })" class="btn pull-right" style="margin-right:8px;">Ver Minutas</a>
@@ -89,7 +89,7 @@
             <hr />
             <div class="row-fluid">
                 <div class="well">
-                    <p>@Model.Proyecto.Descripcion</p>
+                    <pre>@Model.Proyecto.Descripcion</pre>
                 </div>
             </div>
             
