@@ -119,7 +119,7 @@ namespace control_notas_cit.Controllers
         // GET: /Coordinador/ListaAlumnos/
         public ActionResult ListaAlumnos()
         {
-            var model = GetCurrentCelula().Alumnos.ToList();
+            var model = GetCurrentCelula().Alumnos.OrderBy(a => a.Nombre).ThenBy(a => a.Apellido).ToList();
 
             return View(model);
         }
@@ -305,28 +305,33 @@ namespace control_notas_cit.Controllers
         // Obtiene la celula
         private Celula GetCurrentCelula()
         {
-            return repoCelulas.SelectAll().Where(c => c.CelulaID == GetCurrentUser().Celula.CelulaID).Single();
+            return GetCurrentUser().Celula;
         }
         
         // Obtiene el calendario o devuelve null si no existe ninguno
         private Calendario GetCurrentCalendario()
         {
-            return repoCalendarios.SelectAll().Where(c => c.CalendarioID == GetCurrentCelula().Proyecto.CalendarioActualID).SingleOrDefault();
+            var celula = GetCurrentCelula();
+            return celula.Proyecto.Calendarios.Where(c => c.CalendarioID == celula.Proyecto.CalendarioActualID).SingleOrDefault();
         }
 
         // Obtiene la semana actual o devuelve null si no existe calendario aun
         private Semana GetCurrentSemana()
         {
-            if (GetCurrentCalendario() == null)
+            var calendario = GetCurrentCalendario();
+            if (calendario == null)
                 return null;
 
-            return repoSemanas.SelectAll().Where(s => s.SemanaID == GetCurrentCalendario().SemanaActualID).SingleOrDefault();
+            return calendario.Semanas.Where(s => s.SemanaID == calendario.SemanaActualID).SingleOrDefault();
         }
 
         // Obtiene la minuta actual o devuelve null si no existe calendario aun
         private Minuta GetCurrentMinuta()
         {
-            return repoMinutas.SelectAll().Where(m => m.Semana.SemanaID == GetCurrentSemana().SemanaID && m.Celula.CelulaID == GetCurrentCelula().CelulaID).SingleOrDefault();
+            var semana = GetCurrentSemana();
+            var celula = GetCurrentCelula();
+
+            return celula.Minutas.Where(m => m.Semana.SemanaID == semana.SemanaID && m.Celula.CelulaID == celula.CelulaID).SingleOrDefault();
         }
 	}
 }

@@ -99,7 +99,7 @@ http://prntscr.com/5261vo
 - Se le muestran al profesor una lista de minutas pendientes por aprobar antes de terminar la semana.
 - El profesor puede, en la lista de las celulas, revisar una lista de minutas enviadas por cada una de las celulas.
 - El admin puede revisar todas las celulas que tiene un proyecto, pero no las puede editar
-- La lista de profesores y coordinadores se ordena por nombre
+
 
 #### Done
 
@@ -118,6 +118,7 @@ http://prntscr.com/5261vo
 - El coordinador puede subir minutas a la semana.
 - El profesor puede revisar la lista de minutas enviadas en la semana.
 - Resetear los estilos del elemento \<pre\>
+- La lista de profesores, coordinadores y alumnos se ordena por nombre y apellido
 
 ----------------------------------------------------------------------------------
 

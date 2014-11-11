@@ -142,7 +142,7 @@ namespace control_notas_cit.Controllers
         // GET: /Admin/ListaProfesores/
         public ActionResult ListaProfesores()
         {
-            List<ApplicationUser> model = repoUsers.SelectAll().Where(u => u.Roles.Select(r => r.RoleId).Contains(profesor_rol_id)).ToList();
+            List<ApplicationUser> model = repoUsers.SelectAll().Where(u => u.Roles.Select(r => r.RoleId).Contains(profesor_rol_id)).OrderBy(p => p.Nombre).ThenBy(p => p.Apellido).ToList();
             return View(model);
         }
 

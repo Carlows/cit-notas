@@ -393,7 +393,7 @@ namespace control_notas_cit.Controllers
         // GET: /Profesor/ListaCoordinadores/
         public ActionResult ListaCoordinadores()
         {
-            var model = GetCoordinadores();
+            var model = GetCoordinadores().OrderBy(c => c.Nombre).ThenBy(c => c.Apellido).ToList();
             return View(model);
         }
 
@@ -590,7 +590,7 @@ namespace control_notas_cit.Controllers
 
         private Proyecto GetCurrentProyecto()
         {
-            return repoProyectos.SelectAll().Where(p => p.ProyectoID == GetCurrentUser().Proyecto.ProyectoID).Single();
+            return GetCurrentUser().Proyecto;
         }
 
         private string GetCoordinadorRoleID()
@@ -600,19 +600,22 @@ namespace control_notas_cit.Controllers
 
         private List<ApplicationUser> GetCoordinadores()
         {
-            return repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID()) && u.Proyecto.ProyectoID == GetCurrentProyecto().ProyectoID).ToList();
+            var proyecto = GetCurrentProyecto();
+            return proyecto.Profesores.Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID())).ToList();
         }
 
         private List<SelectListItem> GetCelulasList()
         {
-            List<SelectListItem> items = repoCelulas.SelectAll().Where(c => c.Proyecto.ProyectoID == GetCurrentProyecto().ProyectoID).Select(c => new SelectListItem() { Value = c.CelulaID.ToString(), Text = c.Nombre }).ToList();
+            var proyecto = GetCurrentProyecto();
+
+            List<SelectListItem> items = proyecto.Celulas.Where(c => c.Proyecto.ProyectoID == proyecto.ProyectoID).Select(c => new SelectListItem() { Value = c.CelulaID.ToString(), Text = c.Nombre }).ToList();
 
             return items;
         }
 
         private List<SelectListItem> GetCoordinadoresList()
         {
-            List<ApplicationUser> users = repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID()) && u.Proyecto.ProyectoID == GetCurrentProyecto().ProyectoID).ToList();
+            List<ApplicationUser> users = GetCoordinadores();
             List<SelectListItem> items = new List<SelectListItem>();
 
             foreach (ApplicationUser u in users)
@@ -629,7 +632,7 @@ namespace control_notas_cit.Controllers
 
         private List<SelectListItem> GetCoordinadoresLibresList()
         {
-            List<ApplicationUser> users = repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID()) && u.Proyecto.ProyectoID == GetCurrentProyecto().ProyectoID).ToList();
+            List<ApplicationUser> users = GetCoordinadores();
 
             List<ApplicationUser> libres = users.Where(x => x.Celula == null).ToList();
 
