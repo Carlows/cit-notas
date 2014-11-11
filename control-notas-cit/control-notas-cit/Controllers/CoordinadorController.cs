@@ -119,7 +119,7 @@ namespace control_notas_cit.Controllers
         // GET: /Coordinador/ListaAlumnos/
         public ActionResult ListaAlumnos()
         {
-            var model = repoAlumnos.SelectAll().Where(a => a.Celula.CelulaID == GetCurrentCelula().CelulaID).ToList();
+            var model = GetCurrentCelula().Alumnos.ToList();
 
             return View(model);
         }
@@ -326,7 +326,7 @@ namespace control_notas_cit.Controllers
         // Obtiene la minuta actual o devuelve null si no existe calendario aun
         private Minuta GetCurrentMinuta()
         {
-            return repoMinutas.SelectAll().Where(m => m.Semana.SemanaID == GetCurrentSemana().SemanaID).SingleOrDefault();
+            return repoMinutas.SelectAll().Where(m => m.Semana.SemanaID == GetCurrentSemana().SemanaID && m.Celula.CelulaID == GetCurrentCelula().CelulaID).SingleOrDefault();
         }
 	}
 }

@@ -47,7 +47,7 @@ namespace control_notas_cit.Controllers
         // GET: /Admin/Crear/
         public ActionResult Crear()
         {
-            List<ApplicationUser> users = repoUsers.SelectAll().Where(x => x.Roles.Select(y => y.RoleId).Contains(profesor_rol_id)).ToList();
+            List<ApplicationUser> users = repoUsers.SelectAll().Where(x => x.Roles.Select(y => y.RoleId).Contains(profesor_rol_id) && x.Proyecto == null).ToList();
             List<string> nombres = new List<string>();
 
             foreach (ApplicationUser u in users)

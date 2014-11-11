@@ -296,7 +296,7 @@ namespace control_notas_cit.Controllers
         // GET: /Profesor/Celulas/
         public ActionResult Celulas()
         {
-            return View(repoCelulas.SelectAll());
+            return View(repoCelulas.SelectAll().Where(c => c.Proyecto.ProyectoID == GetCurrentProyecto().ProyectoID).ToList());
         }
 
         //
@@ -403,7 +403,7 @@ namespace control_notas_cit.Controllers
         {
             return View(new CoordinadorViewModel()
             {
-                Celulas = new SelectList(repoCelulas.SelectAll().Select(c => c.Nombre).ToList())
+                Celulas = new SelectList(GetCelulasList(), "Value", "Text")
             });
         }
 
@@ -425,12 +425,13 @@ namespace control_notas_cit.Controllers
                     Nombre = model.Nombre,
                     Apellido = model.Apellido,
                     Cedula = model.Cedula,
+                    Proyecto = GetCurrentProyecto(),
                     PhoneNumber = model.Telefono
                 };
 
                 if (model.Celula != null)
                 {
-                    Celula celula = repoCelulas.SelectAll().Where(c => c.Nombre == model.Celula).Single();
+                    Celula celula = repoCelulas.SelectAll().Where(c => c.CelulaID == Int32.Parse(model.Celula)).Single();
                     coordinador.Celula = celula;
                 }
 
@@ -484,7 +485,8 @@ namespace control_notas_cit.Controllers
 
             if(coordinador.Celula != null)
             {
-                model.Celulas = new SelectList(repoCelulas.SelectAll(), "CelulaID", "Nombre", coordinador.Celula.CelulaID);
+                // bug
+                model.Celulas = new SelectList(GetCelulasList(), "Value", "Text", coordinador.Celula.CelulaID.ToString());
             }
             else
             {
@@ -598,19 +600,19 @@ namespace control_notas_cit.Controllers
 
         private List<ApplicationUser> GetCoordinadores()
         {
-            return repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID())).ToList();
+            return repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID()) && u.Proyecto.ProyectoID == GetCurrentProyecto().ProyectoID).ToList();
         }
 
         private List<SelectListItem> GetCelulasList()
         {
-            List<SelectListItem> items = repoCelulas.SelectAll().Select(c => new SelectListItem() { Value = c.CelulaID.ToString(), Text = c.Nombre }).ToList();
+            List<SelectListItem> items = repoCelulas.SelectAll().Where(c => c.Proyecto.ProyectoID == GetCurrentProyecto().ProyectoID).Select(c => new SelectListItem() { Value = c.CelulaID.ToString(), Text = c.Nombre }).ToList();
 
             return items;
         }
 
         private List<SelectListItem> GetCoordinadoresList()
         {
-            List<ApplicationUser> users = repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID())).ToList();
+            List<ApplicationUser> users = repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID()) && u.Proyecto.ProyectoID == GetCurrentProyecto().ProyectoID).ToList();
             List<SelectListItem> items = new List<SelectListItem>();
 
             foreach (ApplicationUser u in users)
@@ -627,7 +629,7 @@ namespace control_notas_cit.Controllers
 
         private List<SelectListItem> GetCoordinadoresLibresList()
         {
-            List<ApplicationUser> users = repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID())).ToList();
+            List<ApplicationUser> users = repoUsers.SelectAll().Where(u => u.Roles.Select(x => x.RoleId).Contains(GetCoordinadorRoleID()) && u.Proyecto.ProyectoID == GetCurrentProyecto().ProyectoID).ToList();
 
             List<ApplicationUser> libres = users.Where(x => x.Celula == null).ToList();
 

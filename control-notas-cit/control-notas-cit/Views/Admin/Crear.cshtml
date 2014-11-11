@@ -42,7 +42,14 @@
                 <div class="control-group">
                     @Html.LabelFor(model => model.Profesores, new { @class = "control-label" })
                     <div class="controls">
-                        @Html.ListBoxFor(x => x.Profesores, new MultiSelectList(Model.Profesores))
+                        @if(@Model.Profesores.Count() == 0)
+                        {
+                            <label>Primero debes agregar un profesor.</label>
+                        }
+                        else
+                        {
+                            @Html.ListBoxFor(x => x.Profesores, new MultiSelectList(Model.Profesores))
+                        }
                     </div>
 
                     @Html.ValidationMessageFor(model => model.Profesores)
