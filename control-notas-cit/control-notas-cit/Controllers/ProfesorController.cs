@@ -569,6 +569,7 @@ namespace control_notas_cit.Controllers
             {
                 return RedirectToAction("Index");
             }
+
             var semana = repoSemanas.SelectById(id);
 
             if(semana == null)
@@ -579,6 +580,25 @@ namespace control_notas_cit.Controllers
             var model = GetCurrentProyecto().Celulas.SelectMany(c => c.Minutas.Where(m => m.Semana.SemanaID == semana.SemanaID)).ToList();
 
             return View(model);
+        }
+
+        //
+        // GET: /Profesor/MinutasCelula/2
+        public ActionResult MinutasCelula(int? id)
+        {
+            if(id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var celula = repoCelulas.SelectById(id);
+
+            if(celula == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View("MinutasSemana", celula.Minutas.ToList());
         }
 
         // Obtiene el usuario logueado actualmente

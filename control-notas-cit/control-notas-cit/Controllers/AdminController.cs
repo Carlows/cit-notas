@@ -305,6 +305,24 @@ namespace control_notas_cit.Controllers
             return RedirectToAction("ListaProfesores");
         }
 
+        //
+        // GET: /Admin/Celulas/2
+        public ActionResult Celulas(int? id)
+        {
+            if(id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var proyecto = repoProyectos.SelectById(id);
+
+            if(proyecto == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(proyecto.Celulas.ToList());
+        }
 
         private List<SelectListItem> GetProyectosList()
         {
