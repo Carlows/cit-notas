@@ -25,6 +25,7 @@ namespace control_notas_cit.Controllers
         private IRepositorioGenerico<Calendario> repoCalendarios = null;
         private IRepositorioGenerico<Semana> repoSemanas = null;
         private IRepositorioGenerico<IdentityRole> repoRoles = null;
+        private IRepositorioGenerico<Minuta> repoMinutas = null;
 
         public ProfesorController()
         {
@@ -38,6 +39,7 @@ namespace control_notas_cit.Controllers
             this.repoCalendarios = new RepositorioGenerico<Calendario>(AppContext);
             this.repoSemanas = new RepositorioGenerico<Semana>(AppContext);
             this.repoRoles = new RepositorioGenerico<IdentityRole>(AppContext);
+            this.repoMinutas = new RepositorioGenerico<Minuta>(AppContext);
         }
 
         //
@@ -416,6 +418,11 @@ namespace control_notas_cit.Controllers
 
             if (ModelState.IsValid)
             {
+                if(!model.ConfirmarPassword.Equals(model.PasswordHash))
+                {
+                    ModelState.AddModelError("", "Las contraseñas no coinciden");
+                    return View(model);
+                }
                 ApplicationUser coordinador;
 
                 coordinador = new ApplicationUser()
@@ -579,7 +586,7 @@ namespace control_notas_cit.Controllers
 
             var model = GetCurrentProyecto().Celulas.SelectMany(c => c.Minutas.Where(m => m.Semana.SemanaID == semana.SemanaID)).ToList();
 
-            return View(model);
+            return View("Minutas", model);
         }
 
         //
@@ -598,7 +605,7 @@ namespace control_notas_cit.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View("MinutasSemana", celula.Minutas.ToList());
+            return View("Minutas", celula.Minutas.ToList());
         }
 
         //
@@ -654,6 +661,31 @@ namespace control_notas_cit.Controllers
             }
 
             return View(model);
+        }
+
+        //
+        // GET: /Profesor/AprobarMinuta/4
+        [HttpPost]
+        public ActionResult AprobarMinuta(int? id_minuta)
+        {
+            if (id_minuta == null)
+            {
+                return Redirect(Request.UrlReferrer.ToString());
+            }
+
+            Minuta minuta = GetCurrentProyecto().Celulas.SelectMany(c => c.Minutas.Where(m => m.MinutaID == id_minuta)).Single();
+
+            if(minuta == null)
+            {
+                return Redirect(Request.UrlReferrer.ToString());
+            }
+
+            minuta.Aprobada = true;
+
+            repoMinutas.Update(minuta);
+            repoMinutas.Save();
+
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         // Obtiene el usuario logueado actualmente

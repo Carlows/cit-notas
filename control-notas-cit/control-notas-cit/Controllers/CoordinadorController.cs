@@ -243,6 +243,11 @@ namespace control_notas_cit.Controllers
             var minutaActual = GetCurrentMinuta();
             if (minutaActual != null)
             {
+                if(minutaActual.Aprobada == true)
+                {
+                    return RedirectToAction("Index");
+                }
+
                 return View(new MinutaCelulaViewModel()
                 {
                     Id = minutaActual.MinutaID,
@@ -293,6 +298,13 @@ namespace control_notas_cit.Controllers
             }
 
             return View(model);
+        }
+
+        //
+        // GET: /Coordinador/Minutas/
+        public ActionResult Minutas()
+        {
+            return View(GetCurrentCelula().Minutas.ToList());
         }
 
         // Obtiene el usuario logueado actualmente

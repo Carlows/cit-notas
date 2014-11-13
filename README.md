@@ -96,8 +96,8 @@ http://prntscr.com/5261vo
 
 ---- Investigar las especificaciones de los proyectos (Que informacion van a almacenar)
 
-- El profesor puede aprobar estas minutas.
 - Se le muestran al profesor una lista de minutas pendientes por aprobar antes de terminar la semana.
+- Al confirmar el fin de la semana, las minutas que no hayan sido apropadas, son automaticamente eliminadas.
 - EL profesor puede cambiar de calendario, es decir, crear uno nuevo.
 - Las vistas proyectos, celulas, etc, necesitan un mejor diseño.
 
@@ -123,5 +123,8 @@ http://prntscr.com/5261vo
 - El profesor puede, en la lista de las celulas, revisar una lista de minutas enviadas por cada una de las celulas.
 - El administrador puede agregar un nuevo administrador.
 - El profesor puede agregar un nuevo profesor al proyecto.
+- El profesor puede aprobar estas minutas.
+- El coordinador puede revisar sus minutas enviadas, no puede editarlas.
+- El coordinador no puede editar la minuta actual cuando ya esta aprobada.
 
 ----------------------------------------------------------------------------------

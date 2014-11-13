@@ -35,7 +35,7 @@
                         @Html.ActionLink("Agregar minuta", "AgregarMinuta", null, new { @class = "btn btn-primaty pull-right" })
                     </div>
                 }
-                else
+                else if(Model.MinutaSemana != null && Model.MinutaSemana.Aprobada == false)
                 {
                     <div class="clearfix">
                         @Html.ActionLink("Editar minuta", "AgregarMinuta", null, new { @class = "btn btn-primaty pull-right" })
