@@ -324,6 +324,60 @@ namespace control_notas_cit.Controllers
             return View(proyecto.Celulas.ToList());
         }
 
+        //
+        // GET: /Admin/AgregarAdministrador/
+        public ActionResult AgregarAdministrador()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Admin/AgregarAdministrador/
+        [HttpPost]
+        public async Task<ActionResult> AgregarAdministrador(AdminViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if(!model.PasswordHash.Equals(model.ConfirmarPassword))
+                {
+                    ModelState.AddModelError("", "Las contraseñas no coinciden.");
+                    return View(model);
+                }
+
+                ApplicationUser admin = new ApplicationUser()
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Nombre = model.Nombre,
+                    Apellido = model.Apellido,
+                    Cedula = model.Cedula,
+                    PhoneNumber = model.Telefono
+                };
+                
+                var adminResult = await UserManager.CreateAsync(admin, model.PasswordHash);
+
+                if (adminResult.Succeeded)
+                {
+                    var roleResult = await UserManager.AddToRoleAsync(admin.Id, "Admin");
+
+                    if (!roleResult.Succeeded)
+                    {
+                        ModelState.AddModelError("", roleResult.Errors.First());
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", adminResult.Errors.First());
+                    return View(model);
+                }
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
         private List<SelectListItem> GetProyectosList()
         {
             List<SelectListItem> proyectos = repoProyectos.SelectAll()

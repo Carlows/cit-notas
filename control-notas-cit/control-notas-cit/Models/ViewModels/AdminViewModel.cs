@@ -28,6 +28,28 @@ namespace control_notas_cit.Models.ViewModels
         public string Descripcion { get; set; }
     }
 
+    public class AdminViewModel
+    {
+        public string Id { get; set; }
+        [Required(ErrorMessage = "El email es requerido.")]
+        [EmailAddress]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "El nombre es requerido.")]
+        public string Nombre { get; set; }
+        [Required(ErrorMessage = "El apellido es requerido.")]
+        public string Apellido { get; set; }
+        [Required(ErrorMessage = "La cedula es requerida.")]
+        public string Cedula { get; set; }
+        [Required(ErrorMessage = "La contraseña es requerida.")]
+        [Display(Name = "Contraseña")]
+        public string PasswordHash { get; set; }
+        [Required(ErrorMessage = "La contraseña es requerida.")]
+        [Display(Name = "Repetir Contraseña")]
+        public string ConfirmarPassword { get; set; }
+        [Required(ErrorMessage = "El telefono es requerido.")]
+        public string Telefono { get; set; }
+    }
+
     public class ProfesorViewModel
     {
         public string Id { get; set; }
@@ -43,6 +65,9 @@ namespace control_notas_cit.Models.ViewModels
         [Required(ErrorMessage="La contraseña es requerida.")]
         [Display(Name="Contraseña")]
         public string PasswordHash { get; set; }
+        [Required(ErrorMessage = "La contraseña es requerida.")]
+        [Display(Name = "Repetir Contraseña")]
+        public string ConfirmarPassword { get; set; }
         [Required(ErrorMessage="El telefono es requerido.")]
         public string Telefono { get; set; }
         [Display(Name="Proyecto")]

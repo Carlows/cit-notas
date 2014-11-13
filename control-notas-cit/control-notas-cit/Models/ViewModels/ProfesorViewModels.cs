@@ -81,6 +81,9 @@ namespace control_notas_cit.Models.ViewModels
         [Required(ErrorMessage="La contraseña es requerida.")]
         [Display(Name="Contraseña")]
         public string PasswordHash { get; set; }
+        [Required(ErrorMessage = "La contraseña es requerida.")]
+        [Display(Name = "Repetir Contraseña")]
+        public string ConfirmarPassword { get; set; }
         [Required(ErrorMessage="El telefono es requerido.")]
         public string Telefono { get; set; }
 

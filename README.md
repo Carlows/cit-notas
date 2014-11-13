@@ -96,8 +96,6 @@ http://prntscr.com/5261vo
 
 ---- Investigar las especificaciones de los proyectos (Que informacion van a almacenar)
 
-- El administrador puede agregar un nuevo administrador.
-- El profesor puede agregar un nuevo profesor al proyecto.
 - El profesor puede aprobar estas minutas.
 - Se le muestran al profesor una lista de minutas pendientes por aprobar antes de terminar la semana.
 - EL profesor puede cambiar de calendario, es decir, crear uno nuevo.
@@ -123,5 +121,7 @@ http://prntscr.com/5261vo
 - La lista de profesores, coordinadores y alumnos se ordena por nombre y apellido
 - El admin puede revisar todas las celulas que tiene un proyecto, pero no las puede editar.
 - El profesor puede, en la lista de las celulas, revisar una lista de minutas enviadas por cada una de las celulas.
+- El administrador puede agregar un nuevo administrador.
+- El profesor puede agregar un nuevo profesor al proyecto.
 
 ----------------------------------------------------------------------------------

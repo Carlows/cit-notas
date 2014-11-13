@@ -601,6 +601,61 @@ namespace control_notas_cit.Controllers
             return View("MinutasSemana", celula.Minutas.ToList());
         }
 
+        //
+        // GET: /Profesor/AgregarProfesor/
+        public ActionResult AgregarProfesor()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Profesor/AgregarProfesor/
+        [HttpPost]
+        public async Task<ActionResult> AgregarProfesor(ProfesorViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if(!model.ConfirmarPassword.Equals(model.PasswordHash))
+                {
+                    ModelState.AddModelError("", "Las contraseñas no coinciden.");
+                    return View(model);
+                }
+
+                ApplicationUser profesor = new ApplicationUser()
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Nombre = model.Nombre,
+                    Apellido = model.Apellido,
+                    Cedula = model.Cedula,
+                    PhoneNumber = model.Telefono,
+                    Proyecto = GetCurrentProyecto()
+                };
+
+                var profesorResult = await UserManager.CreateAsync(profesor, model.PasswordHash);
+
+                if (profesorResult.Succeeded)
+                {
+                    var roleResult = await UserManager.AddToRoleAsync(profesor.Id, "Profesor");
+
+                    if (!roleResult.Succeeded)
+                    {
+                        ModelState.AddModelError("", roleResult.Errors.First());
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", profesorResult.Errors.First());
+                    return View(model);
+                }
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
         // Obtiene el usuario logueado actualmente
         private ApplicationUser GetCurrentUser()
         {
