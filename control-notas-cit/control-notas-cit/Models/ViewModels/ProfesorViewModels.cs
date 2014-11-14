@@ -13,6 +13,7 @@ namespace control_notas_cit.Models.ViewModels
     {
         public string NombreProfesor { get; set; }
         public Proyecto Proyecto { get; set; }
+        public List<String> Profesores { get; set; }
         public Calendario Calendario { get; set; }
     }
     
@@ -39,6 +40,12 @@ namespace control_notas_cit.Models.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
         public DateTime Fecha { get; set; }
         public int NumeroSemana { get; set; }
+    }
+
+    public class FinalizarSemanaViewModel
+    {
+        public Semana Semana { get; set; }
+        public List<Minuta> MinutasPorAprobar { get; set; }
     }
 
     public class CelulaViewModel
@@ -110,5 +117,11 @@ namespace control_notas_cit.Models.ViewModels
         public string CelulaID { get; set; }
 
         public SelectList Celulas { get; set; }
+    }
+
+    public class MinutaPartialViewModel
+    {
+        public Semana CurrentSemana { get; set; }
+        public List<Minuta> Minutas { get; set; }
     }
 }

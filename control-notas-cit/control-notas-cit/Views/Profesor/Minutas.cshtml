@@ -1,6 +1,7 @@
-﻿@model IList<control_notas_cit.Models.Entidades.Minuta>
+﻿@model control_notas_cit.Models.ViewModels.MinutaPartialViewModel
 @using control_notas_cit.Models.Entidades
 @using control_notas_cit.Helpers
+@using control_notas_cit.Models.ViewModels
 @{
     ViewBag.Title = "Minutas";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,7 +12,7 @@
 }
 
 <!--- La lógica que tiene la vista es para dividir los proyectos de 2 en 2 sin perder el layout --->
-@if (Model.Count <= 0)
+@if (Model.Minutas.Count <= 0)
 {
     <div class="alert alert-error">
         <h2>Oops, al parecer aún no se ha subido ninguna minuta.</h2>
@@ -23,16 +24,16 @@ else
         @{
             int counter = 0;
 
-            foreach (Minuta m in @Model)
+            foreach (Minuta m in Model.Minutas)
             {
 
                 @Html.GridBoxesOpen(counter)
 
                 <div class="box span6">
-                    @Html.Partial("_MinutaPartialView", m)
+                    @Html.Partial("_MinutaPartialView", m, new ViewDataDictionary { {"Semana", Model.CurrentSemana.NumeroSemana } })
                 </div>
             
-                @Html.GridBoxesClose(counter, @Model.Count)
+                @Html.GridBoxesClose(counter, Model.Minutas.Count)
 
                 counter++;
             }

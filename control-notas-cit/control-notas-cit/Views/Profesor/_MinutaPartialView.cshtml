@@ -9,11 +9,14 @@
 <div class="box-content">
     <pre>@Model.Contenido</pre>
 
-    <div class="clearfix">
-        @using (Html.BeginForm("AprobarMinuta", "Profesor", FormMethod.Post, new { style = "" }))
-        {
-            @Html.Hidden("id_minuta", Model.MinutaID)
-            <button type="submit" class="btn btn-primary pull-right">Aprobar Minuta</button>
-        }
-    </div>
+    @if(Model.Aprobada == false && Model.Semana.NumeroSemana == (ViewData["Semana"] as int?))
+    { 
+        <div class="clearfix">
+            @using (Html.BeginForm("AprobarMinuta", "Profesor", FormMethod.Post, new { style = "" }))
+            {
+                @Html.Hidden("id_minuta", Model.MinutaID)
+                <button type="submit" class="btn btn-primary pull-right">Aprobar Minuta</button>
+            }
+        </div>
+    }
 </div>

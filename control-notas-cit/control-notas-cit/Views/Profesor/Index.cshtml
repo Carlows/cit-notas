@@ -80,12 +80,9 @@
             <div class="row-fluid">
                 <h3>Profesores del proyecto</h3>
                 <ul>
-                    @foreach (var profesor in @Model.Proyecto.Profesores.Select(p => new { Nombre = p.Nombre, Apellido = p.Apellido, Celula = p.Celula }))
+                    @foreach (var profesor in Model.Profesores)
                     {
-                        if(profesor.Celula == null)
-                        { 
-                            <li><strong>@profesor.Nombre @profesor.Apellido</strong></li>
-                        }
+                        <li><strong>@profesor</strong></li>                       
                     }
                 </ul>
             </div>

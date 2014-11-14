@@ -64,6 +64,7 @@ namespace control_notas_cit.Controllers
             // Utilizo el usuario para obtener los demas datos del modelo de la vista
             model.NombreProfesor = currentUser.Nombre + " " + currentUser.Apellido;
             model.Proyecto = GetCurrentProyecto();
+            model.Profesores = GetCurrentProyecto().Profesores.Where(p => UserManager.IsInRole(p.Id, "Profesor")).Select(z => z.Nombre + " " + z.Apellido).ToList();
 
             // Calendario será null si la query no devuelve un valor, en el caso de que sea null, la vista mostrara un mensaje
             model.Calendario = repoCalendarios.SelectAll()
@@ -247,12 +248,16 @@ namespace control_notas_cit.Controllers
             return View(model);
         }
 
-        // ### NOTA en esta vista se le pedira al profesor revisar las minutas faltantes por revisar
-        // ### crear un modelo para esta vista y pasarle esas minutas
-        // GET: /Profesor/FinalizarSemana/
+        // GET: /Profesor/FinalizarSemana/2
         public ActionResult FinalizarSemana(int id)
         {
-            Semana model = repoSemanas.SelectById(id);
+            Semana semana = repoSemanas.SelectById(id);
+
+            var model = new FinalizarSemanaViewModel()
+            {
+                Semana = semana,
+                MinutasPorAprobar = semana.Minutas.Where(m => m.Aprobada == false).ToList()
+            };
 
             if(model == null)
             {
@@ -584,8 +589,19 @@ namespace control_notas_cit.Controllers
                 return RedirectToAction("Index");
             }
 
-            var model = GetCurrentProyecto().Celulas.SelectMany(c => c.Minutas.Where(m => m.Semana.SemanaID == semana.SemanaID)).ToList();
+            Proyecto proyecto = GetCurrentProyecto();
+            Calendario calendario = GetCurrentCalendario();
 
+            if(calendario == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = new MinutaPartialViewModel()
+            {
+                Minutas = proyecto.Celulas.SelectMany(c => c.Minutas.Where(m => m.Semana.SemanaID == semana.SemanaID)).ToList(),
+                CurrentSemana = calendario.Semanas.Where(s => s.SemanaID == calendario.SemanaActualID).Single()
+            };
             return View("Minutas", model);
         }
 
@@ -605,7 +621,20 @@ namespace control_notas_cit.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View("Minutas", celula.Minutas.ToList());
+            Calendario calendario = GetCurrentCalendario();
+
+            if (calendario == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = new MinutaPartialViewModel()
+            {
+                Minutas = celula.Minutas.ToList(),
+                CurrentSemana = calendario.Semanas.Where(s => s.SemanaID == calendario.SemanaActualID).Single()
+            };
+
+            return View("Minutas", model);
         }
 
         //
@@ -680,7 +709,10 @@ namespace control_notas_cit.Controllers
                 return Redirect(Request.UrlReferrer.ToString());
             }
 
-            minuta.Aprobada = true;
+            if (GetCurrentSemana().SemanaID == minuta.Semana.SemanaID)
+            {
+                minuta.Aprobada = true;
+            }
 
             repoMinutas.Update(minuta);
             repoMinutas.Save();
@@ -698,6 +730,18 @@ namespace control_notas_cit.Controllers
         private Proyecto GetCurrentProyecto()
         {
             return GetCurrentUser().Proyecto;
+        }
+
+        private Calendario GetCurrentCalendario()
+        {
+            var proyecto = GetCurrentProyecto();
+            return proyecto.Calendarios.Where(c => c.CalendarioID == proyecto.CalendarioActualID).SingleOrDefault();
+        }
+
+        private Semana GetCurrentSemana()
+        {
+            var calendario = GetCurrentCalendario();
+            return calendario.Semanas.Where(s => s.SemanaID == calendario.SemanaActualID).Single();
         }
 
         private string GetCoordinadorRoleID()
