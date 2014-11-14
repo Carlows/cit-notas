@@ -33,14 +33,23 @@
                 { 
                     <div class="clearfix">
                         @Html.ActionLink("Agregar minuta", "AgregarMinuta", null, new { @class = "btn btn-primaty pull-right" })
+                        @if(Model.AsistenciaEnviada == false)
+                        {
+                            @Html.ActionLink("Agregar Asistencias", "AsistenciaSemana", null, new { @class = "btn btn-primaty pull-right", style = "margin-right: 8px;" })                            
+                        }
                     </div>
                 }
                 else if(Model.MinutaSemana != null && Model.MinutaSemana.Aprobada == false)
                 {
                     <div class="clearfix">
                         @Html.ActionLink("Editar minuta", "AgregarMinuta", null, new { @class = "btn btn-primaty pull-right" })
+                        @if (Model.AsistenciaEnviada == false)
+                        {
+                            @Html.ActionLink("Agregar Asistencias", "AsistenciaSemana", null, new { @class = "btn btn-primaty pull-right", style = "margin-right: 8px;" })
+                        }
                     </div>
                 }
+                
             }
             else
             {

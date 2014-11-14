@@ -199,9 +199,31 @@ namespace IdentitySample.Models
 
                 ApplicationUser appusrprof = userManager.FindByName(usrnm);
 
+                Proyecto pytc = new Proyecto() { Nombre = "Proyecto prueba " + x, Descripcion = "Phasellus gravida semper nisi. Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc. Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet." };
+
+                for (int y = 1; y <= 4; y++)
+                {
+                    string cuser = String.Format("coordinador{0}@example.com", y);
+                    string cemail = String.Format("coordinador{0}@example.com", y);
+                    string cpwd = "coordinador123";
+
+                    ApplicationUser appcoord = userManager.FindByName(cuser);
+
+                    if(appcoord == null) 
+                    {
+                        IdentityResult cresult = userManager.Create(new ApplicationUser{ UserName = cuser, Email = cemail, Nombre = "Prueba" + y, Apellido = "prueba", Cedula = "1234567", PhoneNumber = "123132", Proyecto = pytc }, cpwd);
+                        appcoord = userManager.FindByName(cuser); 
+                    }
+
+                    if(!userManager.IsInRole(appcoord.Id, coordinadorRole))
+                    {
+                        userManager.AddToRole(appcoord.Id, coordinadorRole);
+                    }
+                }
+
                 if (appusrprof == null)
                 {
-                    IdentityResult result = userManager.Create(new ApplicationUser { UserName = usrnm, Email = usremail, Nombre = "Prueba" + x, Apellido = "prueba", Cedula = "23.522.896", PhoneNumber = "1232132" }, usrpwd);
+                    IdentityResult result = userManager.Create(new ApplicationUser { UserName = usrnm, Email = usremail, Nombre = "Prueba" + x, Apellido = "prueba", Cedula = "23.522.896", PhoneNumber = "1232132", Proyecto = pytc }, usrpwd);
                     appusrprof = userManager.FindByName(usrnm);
                 }
 
@@ -213,22 +235,25 @@ namespace IdentitySample.Models
 
             //////////////////////////////
 
-            for (int x = 1; x <= 10; x++)
-            {
-                Proyecto pytc = new Proyecto() { Nombre = "Proyecto prueba " + x, Descripcion = "Prueba Proyecto Prueba" };
-                db.Proyectos.Add(pytc);
-            }
+            //for (int x = 1; x <= 10; x++)
+            //{
+            //    Proyecto pytc = new Proyecto() { Nombre = "Proyecto prueba " + x, Descripcion = "Phasellus gravida semper nisi. Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc. Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet." };
+            //    db.Proyectos.Add(pytc);
+            //}
 
-            db.SaveChanges();
+            //db.SaveChanges();
 
             List<Proyecto> lista = db.Proyectos.ToList();
+
+            var r = new Random();
+
             foreach (Proyecto project in lista)
             {
-                for (int x = 1; x <= 8; x++)
+                for (int x = 1; x <= 4; x++)
                 {
                     Celula celula = new Celula()
                     {
-                        Nombre = "Celula prueba " + x,
+                        Nombre = "Celula prueba " + r.Next(100),
                         Descripcion = "Phasellus gravida semper nisi. Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc. Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet, leo..",
                         Proyecto = project,
                         Alumnos = new List<Alumno>()
@@ -251,9 +276,6 @@ namespace IdentitySample.Models
             }
 
             db.SaveChanges();
-
-            List<Celula> lit = db.Celulas.ToList();
-            string hola = "";
         }
     }
 

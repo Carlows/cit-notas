@@ -25,6 +25,7 @@ namespace control_notas_cit.Controllers
         private IRepositorioGenerico<IdentityRole> repoRoles = null;
         private IRepositorioGenerico<Alumno> repoAlumnos = null;
         private IRepositorioGenerico<Minuta> repoMinutas = null;
+        private IRepositorioGenerico<Asistencia> repoAsistencias = null;
 
         public CoordinadorController()
         {
@@ -40,6 +41,7 @@ namespace control_notas_cit.Controllers
             this.repoRoles = new RepositorioGenerico<IdentityRole>(AppContext);
             this.repoAlumnos = new RepositorioGenerico<Alumno>(AppContext);
             this.repoMinutas = new RepositorioGenerico<Minuta>(AppContext);
+            this.repoAsistencias = new RepositorioGenerico<Asistencia>(AppContext);
         }
 
         //
@@ -63,6 +65,17 @@ namespace control_notas_cit.Controllers
             model.Celula = GetCurrentCelula();
             model.Semana = GetCurrentSemana();
             model.MinutaSemana = GetCurrentMinuta();
+
+            var asistenciasCelulaCurrentSemana = model.Semana.Asistencias.Where(a => a.Celula.CelulaID == model.Celula.CelulaID && a.Semana.SemanaID == model.Semana.SemanaID).ToList();
+
+            if (asistenciasCelulaCurrentSemana.Count > 0)
+            {
+                model.AsistenciaEnviada = true;
+            }
+            else
+            {
+                model.AsistenciaEnviada = false;
+            }
 
             return View(model);
         }
@@ -301,6 +314,79 @@ namespace control_notas_cit.Controllers
         }
 
         //
+        // GET: /Coordinador/AsistenciaSemana/
+        public ActionResult AsistenciaSemana()
+        {
+            var semana = GetCurrentSemana();
+            if (semana == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var celula = GetCurrentCelula();
+
+            if (celula == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var asistenciasCelula = semana.Asistencias.Where(a => a.Celula.CelulaID == celula.CelulaID && a.Semana.SemanaID == semana.SemanaID).ToList();
+
+            if(asistenciasCelula.Count > 0)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = new AsistenciaSemanaViewModel()
+            {
+                Alumnos = GetCurrentCelula().Alumnos
+            };
+
+            return View(model);
+        }
+
+        //
+        // POST: /Coordinador/AsistenciaSemana/
+        [HttpPost]
+        public ActionResult AsistenciaSemana(AsistenciaSemanaViewModel model)
+        {
+            model.Alumnos = GetCurrentCelula().Alumnos;
+
+            
+            if(ModelState.IsValid)
+            {
+                var celula = GetCurrentCelula();
+                var semana = GetCurrentSemana();
+
+                if(semana == null || celula == null)
+                {
+                    ModelState.AddModelError("", "Hubo un error al encontrar la celula o la semana");
+                    return View(model);
+                }
+                                
+                foreach(int id in model.ID_Alumnos)
+                {
+                    Alumno alumno = celula.Alumnos.Where(a => a.AlumnoID == id).Single();
+                    Asistencia asistencia = new Asistencia()
+                    {
+                        Asistio = true,
+                        Alumno = alumno,
+                        Semana = semana,
+                        Celula = celula
+                    };
+
+                    repoAsistencias.Insert(asistencia);
+                }
+
+                repoAsistencias.Save();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+        //
         // GET: /Coordinador/Minutas/
         public ActionResult Minutas()
         {
@@ -317,6 +403,7 @@ namespace control_notas_cit.Controllers
         // Obtiene la celula
         private Celula GetCurrentCelula()
         {
+            // BUG
             return GetCurrentUser().Celula;
         }
         

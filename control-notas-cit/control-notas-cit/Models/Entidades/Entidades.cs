@@ -131,6 +131,7 @@ namespace control_notas_cit.Models.Entidades
         public int AsistenciaID { get; set; }
         public bool? Asistio { get; set; }
 
+        public virtual Celula Celula { get; set; }
         public virtual Alumno Alumno { get; set; }
         public virtual Semana Semana { get; set; }
     }

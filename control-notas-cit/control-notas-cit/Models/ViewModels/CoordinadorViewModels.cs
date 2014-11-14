@@ -12,6 +12,7 @@ namespace control_notas_cit.Models.ViewModels
         public Celula Celula { get; set; }
         public Semana Semana { get; set; }
         public Minuta MinutaSemana { get; set; }
+        public bool AsistenciaEnviada { get; set; }
     }
 
     public class AlumnoViewModel
@@ -36,5 +37,13 @@ namespace control_notas_cit.Models.ViewModels
         [Required(ErrorMessage = "Este campo es obligatorio")]
         [DataType(DataType.MultilineText)]
         public string Contenido { get; set; }
+    }
+
+    public class AsistenciaSemanaViewModel
+    {
+        public List<Alumno> Alumnos { get; set; }
+
+        [Required]
+        public List<int> ID_Alumnos { get; set; }
     }
 }
