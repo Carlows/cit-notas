@@ -26,6 +26,7 @@ namespace control_notas_cit.Controllers
         private IRepositorioGenerico<Semana> repoSemanas = null;
         private IRepositorioGenerico<IdentityRole> repoRoles = null;
         private IRepositorioGenerico<Minuta> repoMinutas = null;
+        private IRepositorioGenerico<Asistencia> repoAsistencias = null;
 
         public ProfesorController()
         {
@@ -40,6 +41,7 @@ namespace control_notas_cit.Controllers
             this.repoSemanas = new RepositorioGenerico<Semana>(AppContext);
             this.repoRoles = new RepositorioGenerico<IdentityRole>(AppContext);
             this.repoMinutas = new RepositorioGenerico<Minuta>(AppContext);
+            this.repoAsistencias = new RepositorioGenerico<Asistencia>(AppContext);
         }
 
         //
@@ -253,6 +255,11 @@ namespace control_notas_cit.Controllers
         {
             Semana semana = repoSemanas.SelectById(id);
 
+            if(semana.SemanaID != GetCurrentSemana().SemanaID)
+            {
+                return RedirectToAction("Index");
+            }
+
             var model = new FinalizarSemanaViewModel()
             {
                 Semana = semana,
@@ -275,11 +282,34 @@ namespace control_notas_cit.Controllers
             if (id != null)
             {
                 Semana semana = repoSemanas.SelectById(id);
+                List<Celula> celulas = repoCelulas.SelectAll().Where(c => c.Proyecto.ProyectoID == GetCurrentProyecto().ProyectoID).ToList();
 
                 if (semana.Iniciada == true && semana.Finalizada == false)
                 {
                     semana.Finalizada = true;
                     repoSemanas.Update(semana);
+
+                    foreach(Celula celula in celulas)
+                    {
+                        List<Asistencia> asistenciasSemanaActual = celula.Asistencias.Where(a => a.Semana.SemanaID == semana.SemanaID).ToList();
+
+                        if(asistenciasSemanaActual.Count == 0)
+                        {
+                            foreach(Alumno alumno in celula.Alumnos)
+                            {
+                                Asistencia asistencia = new Asistencia()
+                                {
+                                    Alumno = alumno,
+                                    Semana = semana,
+                                    Celula = celula
+                                };
+
+                                repoAsistencias.Insert(asistencia);
+                            }
+
+                            repoAsistencias.Save();
+                        }
+                    }
 
                     if (semana.NumeroSemana < 12)
                     {

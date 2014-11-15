@@ -96,8 +96,6 @@ http://prntscr.com/5261vo
 
 ---- Investigar las especificaciones de los proyectos (Que informacion van a almacenar)
 
-- Tabla de asistencias en el profesor, alumnos desde sem 1 a sem 12. #BUG -> Workaround, al terminar la semana, se le asigna inasistente a todos los alumnos de las celulas que no mandaron la asistencia.
-
 - Al finalizar la semana 12 se cierra el calendario
 - EL profesor puede cambiar de calendario, es decir, crear uno nuevo.
 - Las vistas proyectos, celulas, etc, necesitan un mejor diseño.
@@ -129,5 +127,6 @@ http://prntscr.com/5261vo
 - El coordinador no puede editar la minuta actual cuando ya esta aprobada.
 - Se le muestran al profesor una lista de minutas pendientes por aprobar antes de terminar la semana.
 - El coordinador manda una lista de asistencia desde su celula, en esta semana. No puede editar esta lista luego de enviarla.
+- Tabla de asistencias en el profesor, alumnos desde sem 1 a sem 12. #BUG -> Workaround, al terminar la semana, se le asigna inasistente a todos los alumnos de las celulas que no mandaron la asistencia.
 
 ----------------------------------------------------------------------------------
