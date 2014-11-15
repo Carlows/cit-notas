@@ -364,16 +364,19 @@ namespace control_notas_cit.Controllers
                     return View(model);
                 }
                                 
-                foreach(int id in model.ID_Alumnos)
+                foreach(Alumno alumno in celula.Alumnos)
                 {
-                    Alumno alumno = celula.Alumnos.Where(a => a.AlumnoID == id).Single();
                     Asistencia asistencia = new Asistencia()
                     {
-                        Asistio = true,
                         Alumno = alumno,
                         Semana = semana,
                         Celula = celula
                     };
+
+                    if(model.ID_Alumnos.Contains(alumno.AlumnoID))
+                    {
+                        asistencia.Asistio = true;
+                    }
 
                     repoAsistencias.Insert(asistencia);
                 }

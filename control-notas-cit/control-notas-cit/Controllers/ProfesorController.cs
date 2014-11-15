@@ -56,7 +56,7 @@ namespace control_notas_cit.Controllers
                 return RedirectToAction("Logoff", "Account");
             }
 
-            if(currentUser.Proyecto == null)
+            if (currentUser.Proyecto == null)
             {
                 return RedirectToAction("Logoff", "Account");
             }
@@ -259,7 +259,7 @@ namespace control_notas_cit.Controllers
                 MinutasPorAprobar = semana.Minutas.Where(m => m.Aprobada == false).ToList()
             };
 
-            if(model == null)
+            if (model == null)
             {
                 return RedirectToAction("Index");
             }
@@ -347,14 +347,14 @@ namespace control_notas_cit.Controllers
         // GET: /Profesor/EditarCelula/
         public ActionResult EditarCelula(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return RedirectToAction("Celulas");
             }
 
             var celula = repoCelulas.SelectById(id);
 
-            if(celula == null)
+            if (celula == null)
             {
                 return RedirectToAction("Celulas");
             }
@@ -374,11 +374,11 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public ActionResult EditarCelula(CelulaEditViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var celula = repoCelulas.SelectById(model.Id);
 
-                if(celula == null)
+                if (celula == null)
                 {
                     ModelState.AddModelError("", "No se pudo encontrar la celula");
                     return View(model);
@@ -423,7 +423,7 @@ namespace control_notas_cit.Controllers
 
             if (ModelState.IsValid)
             {
-                if(!model.ConfirmarPassword.Equals(model.PasswordHash))
+                if (!model.ConfirmarPassword.Equals(model.PasswordHash))
                 {
                     ModelState.AddModelError("", "Las contraseñas no coinciden");
                     return View(model);
@@ -495,7 +495,7 @@ namespace control_notas_cit.Controllers
                 Cedula = coordinador.Cedula
             };
 
-            if(coordinador.Celula != null)
+            if (coordinador.Celula != null)
             {
                 // bug
                 model.Celulas = new SelectList(GetCelulasList(), "Value", "Text", coordinador.Celula.CelulaID.ToString());
@@ -577,14 +577,14 @@ namespace control_notas_cit.Controllers
         // GET: /Profesor/MinutasSemana/1
         public ActionResult MinutasSemana(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return RedirectToAction("Index");
             }
 
             var semana = repoSemanas.SelectById(id);
 
-            if(semana == null)
+            if (semana == null)
             {
                 return RedirectToAction("Index");
             }
@@ -592,7 +592,7 @@ namespace control_notas_cit.Controllers
             Proyecto proyecto = GetCurrentProyecto();
             Calendario calendario = GetCurrentCalendario();
 
-            if(calendario == null)
+            if (calendario == null)
             {
                 return RedirectToAction("Index");
             }
@@ -609,14 +609,14 @@ namespace control_notas_cit.Controllers
         // GET: /Profesor/MinutasCelula/2
         public ActionResult MinutasCelula(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return RedirectToAction("Index");
             }
 
             var celula = repoCelulas.SelectById(id);
 
-            if(celula == null)
+            if (celula == null)
             {
                 return RedirectToAction("Index");
             }
@@ -651,7 +651,7 @@ namespace control_notas_cit.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(!model.ConfirmarPassword.Equals(model.PasswordHash))
+                if (!model.ConfirmarPassword.Equals(model.PasswordHash))
                 {
                     ModelState.AddModelError("", "Las contraseñas no coinciden.");
                     return View(model);
@@ -704,7 +704,7 @@ namespace control_notas_cit.Controllers
 
             Minuta minuta = GetCurrentProyecto().Celulas.SelectMany(c => c.Minutas.Where(m => m.MinutaID == id_minuta)).Single();
 
-            if(minuta == null)
+            if (minuta == null)
             {
                 return Redirect(Request.UrlReferrer.ToString());
             }
@@ -718,6 +718,28 @@ namespace control_notas_cit.Controllers
             repoMinutas.Save();
 
             return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        //
+        // GET: /Profesor/Asistencias/
+        public ActionResult Asistencias()
+        {
+            List<Alumno> alumnos = GetCurrentProyecto().Celulas.SelectMany(c => c.Alumnos).ToList();
+
+            List<Alumno> alumnosFiltrados = new List<Alumno>();
+
+            foreach(Alumno alumno in alumnos)
+            {
+                alumno.Asistencias = alumno.Asistencias.Where(a => a.Semana.Calendario.CalendarioID == GetCurrentCalendario().CalendarioID).ToList();
+                alumnosFiltrados.Add(alumno);
+            }
+            
+            var model = new AsistenciasViewModel()
+            {
+                Alumnos = alumnosFiltrados
+            };
+
+            return View(model);
         }
 
         // Obtiene el usuario logueado actualmente

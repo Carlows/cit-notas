@@ -124,4 +124,10 @@ namespace control_notas_cit.Models.ViewModels
         public Semana CurrentSemana { get; set; }
         public List<Minuta> Minutas { get; set; }
     }
+
+    public class AsistenciasViewModel
+    {
+        public List<Alumno> Alumnos { get; set; }
+    }
+
 }

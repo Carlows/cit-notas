@@ -63,6 +63,7 @@ namespace control_notas_cit.Models.Entidades
 
         public virtual Celula Celula { get; set; }
         public virtual Nota Nota { get; set; }
+        public virtual List<Asistencia> Asistencias { get; set; }
     }
 
     public class Minuta
