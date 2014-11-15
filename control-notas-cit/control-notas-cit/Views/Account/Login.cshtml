@@ -26,7 +26,6 @@
     <!-- end: Favicon -->
     <style type="text/css">
         body {
-            background: url(@Url.Content("~/Content/img/bg-login.jpg")) !important;
         }
         ul{
             list-style-type: none;
@@ -35,16 +34,13 @@
 </head>
 
 <body>
-    <div class="container-fluid-full">
-        <div class="row-fluid">
+    <div class="">
+        <div class="">
 
             <div class="row-fluid">
-                <div class="login-box">
-                    <div class="icons">
-                        <a href="#"><i class="halflings-icon home"></i></a>
-                    </div>
+                <div class="box" style="position: absolute; width: 200px; height: 170px; z-index: 10; top: 50%; left: 50%; margin: -104px 0 0 -100px; padding: 20px; border-radius: 4px;">
                     <h2>Ingresa a tu cuenta</h2>
-                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", style = "margin: 0px;" }))
                     {
                         @Html.AntiForgeryToken()
                         <fieldset>
@@ -76,7 +72,7 @@
                             </div>
                             <div class="clearfix"></div>
 
-                            <div class="container-fluid" style="margin-top:20px;">
+                            <div class="" style="margin-top:20px;">
                                 <button type="submit" class="btn btn-block btn-primary">Entrar</button>
                             </div>
                             <div class="clearfix"></div>
@@ -89,7 +85,8 @@
         </div><!--/.fluid-container-->
 
     </div><!--/fluid-row-->
-
+    <div id="particulas" style="height:663px;">
+    </div>
 
 </body>
 </html>
@@ -124,3 +121,47 @@
 <script src="@Url.Content("~/Content/js/counter.js")"></script>
 <script src="@Url.Content("~/Content/js/retina.js")"></script>
 <script src="@Url.Content("~/Content/js/custom/custom.js")"></script>
+<script src="@Url.Content("~/Content/js/particles.min.js")"></script>
+
+<script type="text/javascript">
+    particlesJS('particulas', {
+        particles: {
+            color: '#fff',
+            shape: 'circle',
+            opacity: 1,
+            size: 2.5,
+            size_random: true,
+            nb: 100,
+            line_linked: {
+                enable_auto: true,
+                distance: 250,
+                color: '#fff',
+                opacity: 0.5,
+                width: 1,
+                condensed_mode: {
+                    enable: false,
+                    rotateX: 600,
+                    rotateY: 600
+                }
+            },
+            anim: {
+                enable: true,
+                speed: 2
+            }
+        },
+        interactivity: {
+            enable: true,
+            mouse: {
+                distance: 200
+            },
+            mode: 'grab'
+        },
+        retina_detect: true
+    });
+
+    $(document).ready(function () {
+        var colors = ["#088da5", "#dd2626", "#f47835", "#f09609"];
+        var rand = Math.floor(Math.random() * colors.length);
+        $('body').css("background-color", colors[rand]);
+    });
+</script>
