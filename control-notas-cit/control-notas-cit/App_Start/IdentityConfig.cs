@@ -68,7 +68,7 @@ namespace IdentitySample.Models
     // This is useful if you do not want to tear down the database each time you run the application.
     // public class ApplicationDbInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     // This example shows you how to create a new database if the Model changes
-    public class ApplicationDbInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
+    public class ApplicationDbInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     {
         protected override void Seed(ApplicationDbContext context)
         {
@@ -189,6 +189,7 @@ namespace IdentitySample.Models
                 userManager.AddToRole(profUser.Id, profesorRole);
             }
 
+            var r = new Random();
             //////////////////////////////  
             // Creo 10 profesores
             for (int x = 1; x <= 10; x++)
@@ -203,8 +204,9 @@ namespace IdentitySample.Models
 
                 for (int y = 1; y <= 4; y++)
                 {
-                    string cuser = String.Format("coordinador{0}@example.com", y);
-                    string cemail = String.Format("coordinador{0}@example.com", y);
+                    int num = r.Next(100);
+                    string cuser = String.Format("coordinador{0}@example.com", num);
+                    string cemail = String.Format("coordinador{0}@example.com", num);
                     string cpwd = "coordinador123";
 
                     ApplicationUser appcoord = userManager.FindByName(cuser);
@@ -243,9 +245,7 @@ namespace IdentitySample.Models
 
             //db.SaveChanges();
 
-            List<Proyecto> lista = db.Proyectos.ToList();
-
-            var r = new Random();
+            List<Proyecto> lista = db.Proyectos.ToList();            
 
             foreach (Proyecto project in lista)
             {

@@ -49,6 +49,15 @@
                         }
                     </div>
                 }
+                else
+                {
+                    <div class="clearfix">
+                        @if (Model.AsistenciaEnviada == false)
+                        {
+                            @Html.ActionLink("Agregar Asistencias", "AsistenciaSemana", null, new { @class = "btn btn-primaty pull-right" })
+                        }
+                    </div>
+                }
                 
             }
             else

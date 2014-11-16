@@ -66,9 +66,14 @@ namespace control_notas_cit.Controllers
             model.Semana = GetCurrentSemana();
             model.MinutaSemana = GetCurrentMinuta();
 
-            var asistenciasCelulaCurrentSemana = model.Semana.Asistencias.Where(a => a.Celula.CelulaID == model.Celula.CelulaID && a.Semana.SemanaID == model.Semana.SemanaID).ToList();
+            List<Asistencia> asistenciasCelulaCurrentSemana = null;
 
-            if (asistenciasCelulaCurrentSemana.Count > 0)
+            if (model.Semana != null)
+            {
+                asistenciasCelulaCurrentSemana = model.Semana.Asistencias.Where(a => a.Celula.CelulaID == model.Celula.CelulaID && a.Semana.SemanaID == model.Semana.SemanaID).ToList();
+            }
+
+            if (asistenciasCelulaCurrentSemana != null && asistenciasCelulaCurrentSemana.Count > 0)
             {
                 model.AsistenciaEnviada = true;
             }
@@ -318,20 +323,15 @@ namespace control_notas_cit.Controllers
         public ActionResult AsistenciaSemana()
         {
             var semana = GetCurrentSemana();
-            if (semana == null)
-            {
-                return RedirectToAction("Index");
-            }
-
             var celula = GetCurrentCelula();
-
-            if (celula == null)
+            
+            if (semana == null || celula == null)
             {
                 return RedirectToAction("Index");
             }
 
             var asistenciasCelula = semana.Asistencias.Where(a => a.Celula.CelulaID == celula.CelulaID && a.Semana.SemanaID == semana.SemanaID).ToList();
-
+            
             if(asistenciasCelula.Count > 0)
             {
                 return RedirectToAction("Index");

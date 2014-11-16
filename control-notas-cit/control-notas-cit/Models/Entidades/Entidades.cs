@@ -26,13 +26,23 @@ namespace control_notas_cit.Models.Entidades
 
     public class Calendario
     {
+        public Calendario()
+        {
+            this.Finalizado = false;
+            this.IsLastWeek = false;
+        }
+
         [Key]
         public int CalendarioID { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFinal { get; set; }
         public int SemanaActualID { get; set; }
+        public bool? IsLastWeek { get; set; }
+        public bool? Finalizado { get; set; }
+
         public virtual Proyecto Proyecto { get; set; }
         public virtual List<Semana> Semanas { get; set; }
+        public virtual List<Nota> Notas { get; set; }
     }
 
     public class Celula
@@ -63,7 +73,7 @@ namespace control_notas_cit.Models.Entidades
         public string Email { get; set; }
 
         public virtual Celula Celula { get; set; }
-        public virtual Nota Nota { get; set; }
+        public virtual List<Nota> Notas { get; set; }
         public virtual List<Asistencia> Asistencias { get; set; }
     }
 
@@ -111,14 +121,18 @@ namespace control_notas_cit.Models.Entidades
         public virtual List<Minuta> Minutas { get; set; }
         public virtual List<Asistencia> Asistencias { get; set; }
     }
-
+    
     public class Nota
     {
         [Key]
         public int NotaID { get; set; }
-        public int Nota_Minutas { get; set; }
-        public int Nota_Asistencia { get; set; }
-        public int Nota_Final { get; set; }
+        public float? Nota_Minutas { get; set; }
+        public float? Nota_Asistencia { get; set; }
+        public float? Nota_EvaluacionFinal { get; set; }
+        public float? Nota_Final { get; set; }
+
+        public virtual Calendario Calendario { get; set; }
+        public virtual Alumno Alumno { get; set; }
     }
     
     public class Asistencia

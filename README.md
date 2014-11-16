@@ -96,7 +96,9 @@ http://prntscr.com/5261vo
 
 ---- Investigar las especificaciones de los proyectos (Que informacion van a almacenar)
 
-- Al finalizar la semana 12 se cierra el calendario
+- Sale un nuevo panel en el index del profesor dandole la opcion de subir las notas por la evaluacion final.
+- Cuando se hayan subido esas notas, el panel dira que el calendario ha sido finalizado.
+- Al finalizar el calendario, el profesor podra ver una tabla con las notas de los alumnos.
 - EL profesor puede cambiar de calendario, es decir, crear uno nuevo.
 - Las vistas proyectos, celulas, etc, necesitan un mejor diseño.
 
@@ -128,5 +130,10 @@ http://prntscr.com/5261vo
 - Se le muestran al profesor una lista de minutas pendientes por aprobar antes de terminar la semana.
 - El coordinador manda una lista de asistencia desde su celula, en esta semana. No puede editar esta lista luego de enviarla.
 - Tabla de asistencias en el profesor, alumnos desde sem 1 a sem 12. #BUG -> Workaround, al terminar la semana, se le asigna inasistente a todos los alumnos de las celulas que no mandaron la asistencia.
+- Al finalizar la semana 12 se cierra el calendario
+- Al cerrar el calendario, se crean notas para cada alumno del proyecto.
+- Las notas por minutas se calculan con la sumatoria de las minutas enviadas en cada celula este calendario.
+- Las notas por asistencias se calculan con la sumatoria de las asistencias en este calendario por cada alumno.
+- Se crea una tabla con notas para cada alumno, con las notas por minuta de su celula, y las notas por sus asistencias.
 
 ----------------------------------------------------------------------------------

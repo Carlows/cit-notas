@@ -27,6 +27,7 @@ namespace control_notas_cit.Controllers
         private IRepositorioGenerico<IdentityRole> repoRoles = null;
         private IRepositorioGenerico<Minuta> repoMinutas = null;
         private IRepositorioGenerico<Asistencia> repoAsistencias = null;
+        private IRepositorioGenerico<Nota> repoNotas = null;
 
         public ProfesorController()
         {
@@ -42,6 +43,7 @@ namespace control_notas_cit.Controllers
             this.repoRoles = new RepositorioGenerico<IdentityRole>(AppContext);
             this.repoMinutas = new RepositorioGenerico<Minuta>(AppContext);
             this.repoAsistencias = new RepositorioGenerico<Asistencia>(AppContext);
+            this.repoNotas = new RepositorioGenerico<Nota>(AppContext);
         }
 
         //
@@ -279,6 +281,11 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public ActionResult FinalizarSemana(int? id)
         {
+            if(GetCurrentCalendario().IsLastWeek == true || GetCurrentCalendario().Finalizado == true)
+            {
+                return RedirectToAction("Index");
+            }
+
             if (id != null)
             {
                 Semana semana = repoSemanas.SelectById(id);
@@ -313,11 +320,43 @@ namespace control_notas_cit.Controllers
 
                     if (semana.NumeroSemana < 12)
                     {
-                        Semana proximaSemana = repoSemanas.SelectAll().Where(s => s.NumeroSemana == (semana.NumeroSemana + 1)).Single();
+                        Semana proximaSemana = GetCurrentCalendario().Semanas.Where(s => s.NumeroSemana == (semana.NumeroSemana + 1)).Single();
                         proximaSemana.Iniciada = true;
                         proximaSemana.Calendario.SemanaActualID = proximaSemana.SemanaID;
 
                         repoSemanas.Update(proximaSemana);
+                    }
+                    else
+                    {
+                        Calendario calendario = GetCurrentCalendario();
+                        calendario.IsLastWeek = true;
+                        repoCalendarios.Update(calendario);
+                        repoCalendarios.Save();
+
+                        // Sacar esto de la configuracion al crear el calendario
+                        float minutasPorcalendario = 12.0f;
+                        float notaMinutas = 3.0f;
+                        float asistenciasPorCalendario = 12.0f;
+                        float notaAsistencias = 3.0f;
+                        // Creo las notas
+                        foreach(Celula celula in celulas)
+                        {
+                            int minutasCelula = celula.Minutas.Where(m => m.Semana.Calendario.CalendarioID == calendario.CalendarioID).ToList().Count;
+
+                            foreach(Alumno alumno in celula.Alumnos)
+                            {
+                                int asistenciasAlumno = alumno.Asistencias.Where(a => a.Semana.Calendario.CalendarioID == calendario.CalendarioID).ToList().Count;
+
+                                Nota nota = new Nota()
+                                {
+                                    Nota_Minutas = (notaMinutas / minutasPorcalendario) * minutasCelula,
+                                    Nota_Asistencia = (notaAsistencias / asistenciasPorCalendario) * asistenciasAlumno
+                                };
+
+                                repoNotas.Insert(nota);
+                                repoNotas.Save();
+                            }
+                        }
                     }
 
                     repoSemanas.Save();
