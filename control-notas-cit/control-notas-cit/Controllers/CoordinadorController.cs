@@ -62,6 +62,11 @@ namespace control_notas_cit.Controllers
                 return RedirectToAction("Logoff", "Account");
             }
 
+            if (currentUser.Proyecto == null)
+            {
+                return RedirectToAction("Logoff", "Account");
+            }
+
             model.Celula = GetCurrentCelula();
             model.Semana = GetCurrentSemana();
             model.MinutaSemana = GetCurrentMinuta();
@@ -258,6 +263,11 @@ namespace control_notas_cit.Controllers
                 return RedirectToAction("Index");
             }
 
+            if(GetCurrentCalendario().IsLastWeek == true)
+            {
+                return RedirectToAction("Index");
+            }
+
             var minutaActual = GetCurrentMinuta();
             if (minutaActual != null)
             {
@@ -324,8 +334,9 @@ namespace control_notas_cit.Controllers
         {
             var semana = GetCurrentSemana();
             var celula = GetCurrentCelula();
+            var islastweek = GetCurrentCalendario().IsLastWeek;
             
-            if (semana == null || celula == null)
+            if (semana == null || celula == null || islastweek == true)
             {
                 return RedirectToAction("Index");
             }
@@ -393,7 +404,7 @@ namespace control_notas_cit.Controllers
         // GET: /Coordinador/Minutas/
         public ActionResult Minutas()
         {
-            return View(GetCurrentCelula().Minutas.ToList());
+            return View(GetCurrentCelula().Minutas.Where(m => m.Semana.Calendario.CalendarioID == GetCurrentCalendario().CalendarioID).ToList());
         }
 
         // Obtiene el usuario logueado actualmente
@@ -402,7 +413,7 @@ namespace control_notas_cit.Controllers
             // Tira una excepcion cuando el explorador ya tiene una sesion iniciada, debido a que al ejecutar el Seed, el id es totalmente distinto
             return repoUsers.SelectAll().Where(u => u.Id == User.Identity.GetUserId()).SingleOrDefault();
         }
-
+        
         // Obtiene la celula
         private Celula GetCurrentCelula()
         {

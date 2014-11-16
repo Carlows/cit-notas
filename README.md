@@ -96,10 +96,6 @@ http://prntscr.com/5261vo
 
 ---- Investigar las especificaciones de los proyectos (Que informacion van a almacenar)
 
-- Sale un nuevo panel en el index del profesor dandole la opcion de subir las notas por la evaluacion final.
-- Cuando se hayan subido esas notas, el panel dira que el calendario ha sido finalizado.
-- Al finalizar el calendario, el profesor podra ver una tabla con las notas de los alumnos.
-- EL profesor puede cambiar de calendario, es decir, crear uno nuevo.
 - Las vistas proyectos, celulas, etc, necesitan un mejor diseño.
 
 #### Done
@@ -135,5 +131,9 @@ http://prntscr.com/5261vo
 - Las notas por minutas se calculan con la sumatoria de las minutas enviadas en cada celula este calendario.
 - Las notas por asistencias se calculan con la sumatoria de las asistencias en este calendario por cada alumno.
 - Se crea una tabla con notas para cada alumno, con las notas por minuta de su celula, y las notas por sus asistencias.
+- Sale un nuevo panel en el index del profesor dandole la opcion de subir las notas por la evaluacion final.
+- Cuando se hayan subido esas notas, el panel dira que el calendario ha sido finalizado.
+- Al finalizar el calendario, el profesor podra ver una tabla con las notas de los alumnos.
+- EL profesor puede cambiar de calendario, es decir, crear uno nuevo.
 
 ----------------------------------------------------------------------------------

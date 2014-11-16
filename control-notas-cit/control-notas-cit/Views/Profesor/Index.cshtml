@@ -19,7 +19,7 @@
                 <h2>Última semana</h2>
             </div>
             <div class="box-content">
-
+                <label>Para finalizar este calendario, @Html.ActionLink("sube las notas finales de los alumnos", "CargarNotasFinales")</label>
             </div>
         </div>
     }
@@ -30,7 +30,8 @@
                 <h2>Calendario finalizado</h2>
             </div>
             <div class="box-content">
-                <label>@Html.ActionLink("Crea un calendario nuevo", "AgregarCalendario")</label>
+                @Html.ActionLink("Crea un calendario nuevo", "AgregarCalendario", null, new { @class = "btn" })
+                @Html.ActionLink("Ver notas", "Notas", null, new { @class = "btn" })
             </div>
         </div>
     }

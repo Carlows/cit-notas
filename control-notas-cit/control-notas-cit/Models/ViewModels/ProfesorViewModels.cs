@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DataAnnotationsExtensions;
 
 namespace control_notas_cit.Models.ViewModels
 {
@@ -130,4 +131,26 @@ namespace control_notas_cit.Models.ViewModels
         public List<Alumno> Alumnos { get; set; }
     }
 
+    public class CargarNotasViewModel
+    {
+        public List<Alumno> Alumnos { get; set; }
+        [Required]
+        public List<ID_Alumno_Nota> Notas { get; set; }
+    }
+
+    public class ID_Alumno_Nota
+    {
+        public int ID { get; set; }
+        [Required]
+        [Integer(ErrorMessage = "El valor debe ser un numero entero")]
+        [Range(0, 4, ErrorMessage = "Solo puedes introducir un valor del 0 al 4")]
+        public int Nota { get; set; }
+    }
+
+    public class AlumnoNotaViewModel
+    {
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public Nota Nota { get; set; }
+    }
 }

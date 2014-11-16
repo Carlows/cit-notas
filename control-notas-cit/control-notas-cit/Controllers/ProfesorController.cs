@@ -28,6 +28,7 @@ namespace control_notas_cit.Controllers
         private IRepositorioGenerico<Minuta> repoMinutas = null;
         private IRepositorioGenerico<Asistencia> repoAsistencias = null;
         private IRepositorioGenerico<Nota> repoNotas = null;
+        private IRepositorioGenerico<Alumno> repoAlumnos = null;
 
         public ProfesorController()
         {
@@ -44,6 +45,7 @@ namespace control_notas_cit.Controllers
             this.repoMinutas = new RepositorioGenerico<Minuta>(AppContext);
             this.repoAsistencias = new RepositorioGenerico<Asistencia>(AppContext);
             this.repoNotas = new RepositorioGenerico<Nota>(AppContext);
+            this.repoAlumnos = new RepositorioGenerico<Alumno>(AppContext);
         }
 
         //
@@ -257,7 +259,7 @@ namespace control_notas_cit.Controllers
         {
             Semana semana = repoSemanas.SelectById(id);
 
-            if(semana.SemanaID != GetCurrentSemana().SemanaID)
+            if (semana.SemanaID != GetCurrentSemana().SemanaID)
             {
                 return RedirectToAction("Index");
             }
@@ -281,7 +283,7 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public ActionResult FinalizarSemana(int? id)
         {
-            if(GetCurrentCalendario().IsLastWeek == true || GetCurrentCalendario().Finalizado == true)
+            if (GetCurrentCalendario().IsLastWeek == true || GetCurrentCalendario().Finalizado == true)
             {
                 return RedirectToAction("Index");
             }
@@ -296,13 +298,13 @@ namespace control_notas_cit.Controllers
                     semana.Finalizada = true;
                     repoSemanas.Update(semana);
 
-                    foreach(Celula celula in celulas)
+                    foreach (Celula celula in celulas)
                     {
                         List<Asistencia> asistenciasSemanaActual = celula.Asistencias.Where(a => a.Semana.SemanaID == semana.SemanaID).ToList();
 
-                        if(asistenciasSemanaActual.Count == 0)
+                        if (asistenciasSemanaActual.Count == 0)
                         {
-                            foreach(Alumno alumno in celula.Alumnos)
+                            foreach (Alumno alumno in celula.Alumnos)
                             {
                                 Asistencia asistencia = new Asistencia()
                                 {
@@ -339,18 +341,20 @@ namespace control_notas_cit.Controllers
                         float asistenciasPorCalendario = 12.0f;
                         float notaAsistencias = 3.0f;
                         // Creo las notas
-                        foreach(Celula celula in celulas)
+                        foreach (Celula celula in celulas)
                         {
-                            int minutasCelula = celula.Minutas.Where(m => m.Semana.Calendario.CalendarioID == calendario.CalendarioID).ToList().Count;
+                            int minutasCelula = celula.Minutas.Where(m => m.Semana.Calendario.CalendarioID == calendario.CalendarioID && m.Aprobada == true).ToList().Count;
 
-                            foreach(Alumno alumno in celula.Alumnos)
+                            foreach (Alumno alumno in celula.Alumnos)
                             {
-                                int asistenciasAlumno = alumno.Asistencias.Where(a => a.Semana.Calendario.CalendarioID == calendario.CalendarioID).ToList().Count;
+                                int asistenciasAlumno = alumno.Asistencias.Where(a => a.Semana.Calendario.CalendarioID == calendario.CalendarioID && a.Asistio == true).ToList().Count;
 
                                 Nota nota = new Nota()
                                 {
                                     Nota_Minutas = (notaMinutas / minutasPorcalendario) * minutasCelula,
-                                    Nota_Asistencia = (notaAsistencias / asistenciasPorCalendario) * asistenciasAlumno
+                                    Nota_Asistencia = (notaAsistencias / asistenciasPorCalendario) * asistenciasAlumno,
+                                    Alumno = alumno,
+                                    Calendario = calendario
                                 };
 
                                 repoNotas.Insert(nota);
@@ -366,6 +370,68 @@ namespace control_notas_cit.Controllers
             }
 
             return View();
+        }
+
+        //
+        // GET: /Profesor/CargarNotasFinales/
+        public ActionResult CargarNotasFinales()
+        {
+            if (GetCurrentCalendario().IsLastWeek != true || GetCurrentCalendario().Finalizado == true)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = new CargarNotasViewModel()
+            {
+                Alumnos = GetCurrentProyecto().Celulas.SelectMany(c => c.Alumnos).ToList()
+            };
+
+            return View(model);
+        }
+
+        //
+        // POST: /Profesor/CargarNotasFinales/
+        [HttpPost]
+        public ActionResult CargarNotasFinales(CargarNotasViewModel model)
+        {
+            model.Alumnos = GetCurrentProyecto().Celulas.SelectMany(c => c.Alumnos).ToList();
+
+            if (ModelState.IsValid)
+            {
+                foreach (ID_Alumno_Nota data in model.Notas)
+                {
+                    var alumno = repoAlumnos.SelectById(data.ID);
+
+                    if (alumno == null)
+                    {
+                        ModelState.AddModelError("", "No se pudo encontrar el alumno");
+                    }
+
+                    var nota = alumno.Notas.Where(n => n.Calendario.CalendarioID == GetCurrentCalendario().CalendarioID).Single();
+
+                    if (nota == null)
+                    {
+                        ModelState.AddModelError("", "No se pudo encontrar la nota");
+                    }
+
+                    nota.Nota_EvaluacionFinal = data.Nota;
+                    nota.Nota_Final = nota.Nota_Minutas + nota.Nota_Asistencia + nota.Nota_EvaluacionFinal;
+
+                    repoNotas.Update(nota);
+                    repoNotas.Save();
+
+                }
+
+                var calendario = GetCurrentCalendario();
+                calendario.Finalizado = true;
+
+                repoCalendarios.Update(calendario);
+                repoCalendarios.Save();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
 
         //
@@ -699,7 +765,7 @@ namespace control_notas_cit.Controllers
 
             var model = new MinutaPartialViewModel()
             {
-                Minutas = celula.Minutas.ToList(),
+                Minutas = celula.Minutas.Where(m => m.Semana.Calendario.CalendarioID == calendario.CalendarioID).ToList(),
                 CurrentSemana = calendario.Semanas.Where(s => s.SemanaID == calendario.SemanaActualID).Single()
             };
 
@@ -793,20 +859,43 @@ namespace control_notas_cit.Controllers
         // GET: /Profesor/Asistencias/
         public ActionResult Asistencias()
         {
-            List<Alumno> alumnos = GetCurrentProyecto().Celulas.SelectMany(c => c.Alumnos).ToList();
+            List<Alumno> alumnos = GetAlumnosProyecto();
 
             List<Alumno> alumnosFiltrados = new List<Alumno>();
 
-            foreach(Alumno alumno in alumnos)
+            foreach (Alumno alumno in alumnos)
             {
                 alumno.Asistencias = alumno.Asistencias.Where(a => a.Semana.Calendario.CalendarioID == GetCurrentCalendario().CalendarioID).ToList();
                 alumnosFiltrados.Add(alumno);
             }
-            
+
             var model = new AsistenciasViewModel()
             {
                 Alumnos = alumnosFiltrados
             };
+
+            return View(model);
+        }
+
+        //
+        // GET: /Profesor/Notas/
+        public ActionResult Notas()
+        {
+            List<Alumno> alumnos = GetAlumnosProyecto();
+
+            List<AlumnoNotaViewModel> model = new List<AlumnoNotaViewModel>();
+
+            foreach (Alumno alumno in alumnos)
+            {
+                AlumnoNotaViewModel a = new AlumnoNotaViewModel()
+                {
+                    Nombre = alumno.Nombre,
+                    Apellido = alumno.Apellido,
+                    Nota = alumno.Notas.Where(n => n.Calendario.CalendarioID == GetCurrentCalendario().CalendarioID).Single()
+                };
+
+                model.Add(a);
+            }
 
             return View(model);
         }
@@ -870,6 +959,11 @@ namespace control_notas_cit.Controllers
             }
 
             return items;
+        }
+
+        private List<Alumno> GetAlumnosProyecto()
+        {
+            return GetCurrentProyecto().Celulas.SelectMany(c => c.Alumnos).ToList();
         }
 
         private List<SelectListItem> GetCoordinadoresLibresList()
