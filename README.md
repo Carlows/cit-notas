@@ -135,5 +135,6 @@ http://prntscr.com/5261vo
 - Cuando se hayan subido esas notas, el panel dira que el calendario ha sido finalizado.
 - Al finalizar el calendario, el profesor podra ver una tabla con las notas de los alumnos.
 - EL profesor puede cambiar de calendario, es decir, crear uno nuevo.
+- El coordinador puede subir la minuta a traves de un archivo de texto
 
 ----------------------------------------------------------------------------------

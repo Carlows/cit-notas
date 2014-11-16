@@ -34,7 +34,6 @@ namespace control_notas_cit.Models.ViewModels
     public class MinutaCelulaViewModel
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
         [DataType(DataType.MultilineText)]
         public string Contenido { get; set; }
     }

@@ -16,7 +16,7 @@
     </div>
     <div class="box-content">
         <fieldset>
-            @using (Html.BeginForm("AgregarMinuta", "Coordinador", FormMethod.Post, new { @class = "form-horizontal" }))
+            @using (Html.BeginForm("AgregarMinuta", "Coordinador", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
             {
                 <div class="container-fluid">
                     @Html.ValidationSummary(true)
@@ -31,7 +31,18 @@
                         @Html.ValidationMessageFor(model => model.Contenido)
                     </div>
                 </div>
-
+                
+                <h3>O puedes subir un archivo de texto</h3>
+                
+                <div class="control-group">
+                    <label class="control-label">Sube un archivo: </label>
+                    <div class="controls">
+                        <div class="uploader">
+                            <input type="file" name="archivo" />
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Aceptar</button>
                     @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn" })

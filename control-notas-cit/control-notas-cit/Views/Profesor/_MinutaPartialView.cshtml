@@ -9,7 +9,7 @@
 <div class="box-content">
     <pre>@Model.Contenido</pre>
 
-    @if(Model.Aprobada == false && Model.Semana.NumeroSemana == (ViewData["Semana"] as int?))
+    @if(Model.Aprobada == false && Model.Semana.NumeroSemana == (ViewData["Semana"] as int?) && (ViewData["IsLastWeek"] as bool?) == false)
     { 
         <div class="clearfix">
             @using (Html.BeginForm("AprobarMinuta", "Profesor", FormMethod.Post, new { style = "" }))

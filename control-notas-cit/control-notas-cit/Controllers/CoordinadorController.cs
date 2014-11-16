@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
 using control_notas_cit.Models.ViewModels;
 using control_notas_cit.Models.Entidades;
+using System.IO;
 
 namespace control_notas_cit.Controllers
 {
@@ -289,7 +290,7 @@ namespace control_notas_cit.Controllers
         //
         // POST: /Coordinador/AgregarMinuta/
         [HttpPost]
-        public ActionResult AgregarMinuta(MinutaCelulaViewModel model)
+        public ActionResult AgregarMinuta(MinutaCelulaViewModel model, HttpPostedFileBase archivo)
         {
             if(ModelState.IsValid)
             {
@@ -300,6 +301,33 @@ namespace control_notas_cit.Controllers
                 {
                     ModelState.AddModelError("", "No se pudo encontrar la celula o la semana");
                     return View(model);
+                }
+
+                if (model.Contenido == null)
+                {
+                    if (archivo != null)
+                    {
+                        if (archivo.ContentLength > 0)
+                        {
+                            if (Path.GetExtension(archivo.FileName) == ".txt")
+                            {
+                                BinaryReader b = new BinaryReader(archivo.InputStream);
+                                byte[] binData = b.ReadBytes(archivo.ContentLength);
+
+                                model.Contenido = System.Text.Encoding.UTF8.GetString(binData);
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "La minuta no puede estar vacia.");
+                            return View();
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "La minuta no puede estar vacia.");
+                        return View();
+                    }
                 }
 
                 Minuta minuta = new Minuta()

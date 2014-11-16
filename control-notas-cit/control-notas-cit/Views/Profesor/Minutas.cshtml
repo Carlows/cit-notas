@@ -30,7 +30,7 @@ else
                 @Html.GridBoxesOpen(counter)
 
                 <div class="box span6">
-                    @Html.Partial("_MinutaPartialView", m, new ViewDataDictionary { {"Semana", Model.CurrentSemana.NumeroSemana } })
+                    @Html.Partial("_MinutaPartialView", m, new ViewDataDictionary { {"Semana", Model.CurrentSemana.NumeroSemana }, { "IsLastWeek", Model.CurrentSemana.Calendario.IsLastWeek } })
                 </div>
             
                 @Html.GridBoxesClose(counter, Model.Minutas.Count)
