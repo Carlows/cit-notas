@@ -418,7 +418,7 @@ namespace control_notas_cit.Controllers
 
                 data.dataLines = alumnosString;
 
-                return File(new System.Text.UTF8Encoding().GetBytes(ExportHelper.ConvertToCSV(data)), "text/csv", "ReporteNotas.csv"); 
+                return File(new System.Text.UTF8Encoding().GetBytes(ExportHelper.ConvertToCSV(data)), "text/csv", string.Format("ReporteNotas{0}.csv", proyecto.Nombre)); 
             }
             else
             {
@@ -459,7 +459,7 @@ namespace control_notas_cit.Controllers
                                        Nota = alumno.Notas.Where(n => n.Calendario.CalendarioID == proyecto.CalendarioActualID).Single().Nota_Final.ToString()
                                    }).ToList();
 
-                return File(new System.Text.UTF8Encoding().GetBytes(ExportHelper.ConvertToExcel<Data>(datos)), "application/ms-excel", "ReporteNotas.xls"); 
+                return File(new System.Text.UTF8Encoding().GetBytes(ExportHelper.ConvertToExcel<Data>(datos)), "application/ms-excel", string.Format("ReporteNotas{0}.xls", proyecto.Nombre)); 
             }
             else
             {
