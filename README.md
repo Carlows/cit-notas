@@ -96,6 +96,8 @@ http://prntscr.com/5261vo
 
 ---- Investigar las especificaciones de los proyectos (Que informacion van a almacenar)
 
+- Cuando un proyecto termina el calendario actual, el administrador, verificara el estado actual del calendario del proyecto, y si esta finalizado y no hay uno nuevo, exportara la informacion de los alumnos a csv.
+- Extender la informacion que se muestra al usuario.
 - Las vistas proyectos, celulas, etc, necesitan un mejor diseño.
 
 #### Done
@@ -136,5 +138,6 @@ http://prntscr.com/5261vo
 - Al finalizar el calendario, el profesor podra ver una tabla con las notas de los alumnos.
 - EL profesor puede cambiar de calendario, es decir, crear uno nuevo.
 - El coordinador puede subir la minuta a traves de un archivo de texto
+- Permitir a todos los usuarios cambiar su contraseña.
 
 ----------------------------------------------------------------------------------

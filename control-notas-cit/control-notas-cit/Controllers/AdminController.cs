@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Threading.Tasks;
 using Microsoft.Owin;
+using control_notas_cit.Helpers;
 
 namespace control_notas_cit.Controllers
 {
@@ -378,6 +379,94 @@ namespace control_notas_cit.Controllers
             return View(model);
         }
 
+        //
+        // GET: /Admin/ExportarNotasCSV/
+        public ActionResult ExportarNotasCSV(int? id_proyecto)
+        {
+            if(id_proyecto == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var proyecto = repoProyectos.SelectById(id_proyecto);
+
+            if (proyecto == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            bool puedeDescargar = proyecto.Calendarios.Where(c => c.CalendarioID == proyecto.CalendarioActualID).Single().Finalizado == true;
+
+            if(puedeDescargar)
+            {
+                DataToConvert data = new DataToConvert();
+
+                data.headers = new List<string> { "Nombre", "Apellido", "Cedula", "Proyecto", "Celula", "Nota Final" };
+
+                var alumnos = proyecto.Celulas.SelectMany(c => c.Alumnos).ToList();
+
+                List<List<string>> alumnosString = (from alumno in alumnos
+                                   select new List<string>
+                                   {
+                                       alumno.Nombre, 
+                                       alumno.Apellido, 
+                                       alumno.Cedula, 
+                                       alumno.Celula.Proyecto.Nombre, 
+                                       alumno.Celula.Nombre, 
+                                       alumno.Notas.Where(n => n.Calendario.CalendarioID == proyecto.CalendarioActualID).Single().Nota_Final.ToString()
+                                   }.ToList()).ToList();
+
+                data.dataLines = alumnosString;
+
+                return File(new System.Text.UTF8Encoding().GetBytes(ExportHelper.ConvertToCSV(data)), "text/csv", "ReporteNotas.csv"); 
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        //
+        // GET: /Admin/ExportarNotasExcel/
+        public ActionResult ExportarNotasExcel(int? id_proyecto)
+        {
+            if(id_proyecto == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var proyecto = repoProyectos.SelectById(id_proyecto);
+
+            if (proyecto == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            bool puedeDescargar = proyecto.Calendarios.Where(c => c.CalendarioID == proyecto.CalendarioActualID).Single().Finalizado == true;
+
+            if (puedeDescargar)
+            {            
+                var alumnos = proyecto.Celulas.SelectMany(c => c.Alumnos).ToList();
+
+                List<Data> datos = (from alumno in alumnos
+                                   select new Data
+                                   {
+                                       Nombre = alumno.Nombre,
+                                       Apellido = alumno.Apellido,
+                                       Cedula = alumno.Cedula,
+                                       Proyecto = alumno.Celula.Proyecto.Nombre,
+                                       Celula = alumno.Celula.Nombre,
+                                       Nota = alumno.Notas.Where(n => n.Calendario.CalendarioID == proyecto.CalendarioActualID).Single().Nota_Final.ToString()
+                                   }).ToList();
+
+                return File(new System.Text.UTF8Encoding().GetBytes(ExportHelper.ConvertToExcel<Data>(datos)), "application/ms-excel", "ReporteNotas.xls"); 
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
         private List<SelectListItem> GetProyectosList()
         {
             List<SelectListItem> proyectos = repoProyectos.SelectAll()
@@ -417,6 +506,16 @@ namespace control_notas_cit.Controllers
             {
                 _roleManager = value;
             }
+        }
+
+        struct Data
+        {
+            public string Nombre { get; set; }
+            public string Apellido { get; set; }
+            public string Cedula { get; set; }
+            public string Proyecto { get; set; }
+            public string Celula { get; set; }
+            public string Nota { get; set; }
         }
     }
 }

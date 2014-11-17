@@ -103,6 +103,35 @@ namespace IdentitySample.Controllers
         }
 
         //
+        // GET: /Account/ChangePassword
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Account/ChangePassword
+        [HttpPost]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("RedirectToController");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "No se pudo cambiar la contraseña");
+                    return View();
+                }
+            }
+
+            return View();
+        }
+
+        //
         // GET: /Account/LogOff
         public ActionResult LogOff()
         {
@@ -112,7 +141,6 @@ namespace IdentitySample.Controllers
         //
         // POST: /Account/LogOff
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult LogOff(int var = 0)
         {
             AuthenticationManager.SignOut();
