@@ -160,7 +160,7 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public ActionResult AgregarAlumno(AlumnoViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 Alumno alumno = new Alumno()
                 {
@@ -185,7 +185,7 @@ namespace control_notas_cit.Controllers
         // GET: /Coordinador/EditarAlumno/1
         public ActionResult EditarAlumno(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return RedirectToAction("ListaAlumnos");
             }
@@ -215,11 +215,11 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public ActionResult EditarAlumno(AlumnoViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 Alumno alumno = repoAlumnos.SelectById(model.Id);
 
-                if(alumno == null)
+                if (alumno == null)
                 {
                     ModelState.AddModelError("", "No se pudo encontrar el alumno");
                     return View(model);
@@ -244,7 +244,7 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public ActionResult BorrarAlumno(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return RedirectToAction("ListaAlumnos");
             }
@@ -259,12 +259,12 @@ namespace control_notas_cit.Controllers
         // GET: /Coordinador/AgregarMinuta/
         public ActionResult AgregarMinuta()
         {
-            if(GetCurrentSemana() == null)
+            if (GetCurrentSemana() == null)
             {
                 return RedirectToAction("Index");
             }
 
-            if(GetCurrentCalendario().IsLastWeek == true)
+            if (GetCurrentCalendario().IsLastWeek == true)
             {
                 return RedirectToAction("Index");
             }
@@ -272,7 +272,7 @@ namespace control_notas_cit.Controllers
             var minutaActual = GetCurrentMinuta();
             if (minutaActual != null)
             {
-                if(minutaActual.Aprobada == true)
+                if (minutaActual.Aprobada == true)
                 {
                     return RedirectToAction("Index");
                 }
@@ -292,35 +292,27 @@ namespace control_notas_cit.Controllers
         [HttpPost]
         public ActionResult AgregarMinuta(MinutaCelulaViewModel model, HttpPostedFileBase archivo)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var celula = GetCurrentCelula();
                 var semana = GetCurrentSemana();
 
-                if(celula == null || semana == null)
+                if (celula == null || semana == null)
                 {
                     ModelState.AddModelError("", "No se pudo encontrar la celula o la semana");
                     return View(model);
                 }
 
-                if (model.Contenido == null)
+                if (archivo != null)
                 {
-                    if (archivo != null)
+                    if (archivo.ContentLength > 0)
                     {
-                        if (archivo.ContentLength > 0)
+                        if (Path.GetExtension(archivo.FileName) == ".txt")
                         {
-                            if (Path.GetExtension(archivo.FileName) == ".txt")
-                            {
-                                BinaryReader b = new BinaryReader(archivo.InputStream);
-                                byte[] binData = b.ReadBytes(archivo.ContentLength);
+                            BinaryReader b = new BinaryReader(archivo.InputStream);
+                            byte[] binData = b.ReadBytes(archivo.ContentLength);
 
-                                model.Contenido = System.Text.Encoding.UTF8.GetString(binData);
-                            }
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("", "La minuta no puede estar vacia.");
-                            return View();
+                            model.Contenido = System.Text.Encoding.UTF8.GetString(binData);
                         }
                     }
                     else
@@ -328,6 +320,11 @@ namespace control_notas_cit.Controllers
                         ModelState.AddModelError("", "La minuta no puede estar vacia.");
                         return View();
                     }
+                }
+                else if(model.Contenido == null)
+                {
+                    ModelState.AddModelError("", "La minuta no puede estar vacia.");
+                    return View();
                 }
 
                 Minuta minuta = new Minuta()
@@ -340,7 +337,7 @@ namespace control_notas_cit.Controllers
                 if (model.Id == 0)
                 {
                     repoMinutas.Insert(minuta);
-                    repoMinutas.Save();                    
+                    repoMinutas.Save();
                 }
                 else
                 {
@@ -363,15 +360,15 @@ namespace control_notas_cit.Controllers
             var semana = GetCurrentSemana();
             var celula = GetCurrentCelula();
             var islastweek = GetCurrentCalendario().IsLastWeek;
-            
+
             if (semana == null || celula == null || islastweek == true)
             {
                 return RedirectToAction("Index");
             }
 
             var asistenciasCelula = semana.Asistencias.Where(a => a.Celula.CelulaID == celula.CelulaID && a.Semana.SemanaID == semana.SemanaID).ToList();
-            
-            if(asistenciasCelula.Count > 0)
+
+            if (asistenciasCelula.Count > 0)
             {
                 return RedirectToAction("Index");
             }
@@ -391,19 +388,19 @@ namespace control_notas_cit.Controllers
         {
             model.Alumnos = GetCurrentCelula().Alumnos;
 
-            
-            if(ModelState.IsValid)
+
+            if (ModelState.IsValid)
             {
                 var celula = GetCurrentCelula();
                 var semana = GetCurrentSemana();
 
-                if(semana == null || celula == null)
+                if (semana == null || celula == null)
                 {
                     ModelState.AddModelError("", "Hubo un error al encontrar la celula o la semana");
                     return View(model);
                 }
-                                
-                foreach(Alumno alumno in celula.Alumnos)
+
+                foreach (Alumno alumno in celula.Alumnos)
                 {
                     Asistencia asistencia = new Asistencia()
                     {
@@ -412,7 +409,7 @@ namespace control_notas_cit.Controllers
                         Celula = celula
                     };
 
-                    if(model.ID_Alumnos.Contains(alumno.AlumnoID))
+                    if (model.ID_Alumnos.Contains(alumno.AlumnoID))
                     {
                         asistencia.Asistio = true;
                     }
@@ -441,14 +438,14 @@ namespace control_notas_cit.Controllers
             // Tira una excepcion cuando el explorador ya tiene una sesion iniciada, debido a que al ejecutar el Seed, el id es totalmente distinto
             return repoUsers.SelectAll().Where(u => u.Id == User.Identity.GetUserId()).SingleOrDefault();
         }
-        
+
         // Obtiene la celula
         private Celula GetCurrentCelula()
         {
             // BUG
             return GetCurrentUser().Celula;
         }
-        
+
         // Obtiene el calendario o devuelve null si no existe ninguno
         private Calendario GetCurrentCalendario()
         {
@@ -474,5 +471,5 @@ namespace control_notas_cit.Controllers
 
             return celula.Minutas.Where(m => m.Semana.SemanaID == semana.SemanaID && m.Celula.CelulaID == celula.CelulaID).SingleOrDefault();
         }
-	}
+    }
 }
