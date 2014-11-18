@@ -404,6 +404,7 @@ namespace control_notas_cit.Controllers
                 data.headers = new List<string> { "Nombre", "Apellido", "Cedula", "Proyecto", "Celula", "Nota Final" };
 
                 var alumnos = proyecto.Celulas.SelectMany(c => c.Alumnos).ToList();
+                                
 
                 List<List<string>> alumnosString = (from alumno in alumnos
                                    select new List<string>
@@ -413,7 +414,7 @@ namespace control_notas_cit.Controllers
                                        alumno.Cedula, 
                                        alumno.Celula.Proyecto.Nombre, 
                                        alumno.Celula.Nombre, 
-                                       alumno.Notas.Where(n => n.Calendario.CalendarioID == proyecto.CalendarioActualID).Single().Nota_Final.ToString()
+                                       (Math.Round((float)(alumno.Notas.Where(n => n.Calendario.CalendarioID == proyecto.CalendarioActualID).Single().Nota_Final))).ToString()
                                    }.ToList()).ToList();
 
                 data.dataLines = alumnosString;
@@ -456,7 +457,7 @@ namespace control_notas_cit.Controllers
                                        Cedula = alumno.Cedula,
                                        Proyecto = alumno.Celula.Proyecto.Nombre,
                                        Celula = alumno.Celula.Nombre,
-                                       Nota = alumno.Notas.Where(n => n.Calendario.CalendarioID == proyecto.CalendarioActualID).Single().Nota_Final.ToString()
+                                       Nota = (Math.Round((float)(alumno.Notas.Where(n => n.Calendario.CalendarioID == proyecto.CalendarioActualID).Single().Nota_Final))).ToString()
                                    }).ToList();
 
                 return File(new System.Text.UTF8Encoding().GetBytes(ExportHelper.ConvertToExcel<Data>(datos)), "application/ms-excel", string.Format("ReporteNotas{0}.xls", proyecto.Nombre)); 

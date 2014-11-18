@@ -24,8 +24,35 @@
                     <div class="control-group">
                         @Html.LabelFor(m => m.FechaInicio, new { @class = "control-label" })
                         <div class="controls">
-                            @Html.TextBoxFor(m => m.FechaInicio, "{0:dd/MM/yyyy}", new { @class = "input-xlarge fecha" })
+                            @Html.TextBoxFor(m => m.FechaInicio, "{0:dd/MM/yyyy}", new { @class = "fecha" })
                         </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        @Html.LabelFor(m => m.Notas_Minutas_Valor, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.Notas_Minutas_Valor)
+                            @Html.ValidationMessageFor(m => m.Notas_Minutas_Valor)
+                        </div>
+
+                    </div>
+                    
+                    <div class="control-group">
+                        @Html.LabelFor(m => m.Notas_Asistencias_Valor, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.Notas_Asistencias_Valor)
+                            @Html.ValidationMessageFor(m => m.Notas_Asistencias_Valor)
+                        </div>
+
+                    </div>
+                    
+                    <div class="control-group">
+                        @Html.LabelFor(m => m.Notas_Presentacion_Valor, new { @class = "control-label" })
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.Notas_Presentacion_Valor)
+                            @Html.ValidationMessageFor(m => m.Notas_Presentacion_Valor)
+                        </div>
+
                     </div>
                     
                     <label class="">Ahora completa la informacion para el calendario.</label>

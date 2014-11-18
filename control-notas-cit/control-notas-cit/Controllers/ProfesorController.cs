@@ -194,6 +194,19 @@ namespace control_notas_cit.Controllers
 
                 calendario.Proyecto = proyecto;
 
+                // Notas
+                float suma = (float)model.Notas_Asistencias_Valor + (float)model.Notas_Minutas_Valor + (float)model.Notas_Presentacion_Valor;
+
+                if (suma != 10.0f)
+                {
+                    ModelState.AddModelError("", "La sumatoria de las notas debe dar 10");
+                    return View(model);
+                }
+
+                calendario.Notas_Minutas_Valor = model.Notas_Minutas_Valor;
+                calendario.Notas_Asistencias_Valor = model.Notas_Asistencias_Valor;
+                calendario.Notas_Evaluacion_Final_Valor = model.Notas_Presentacion_Valor;
+
                 repoCalendarios.Insert(calendario);
                 repoCalendarios.Save();
 
@@ -335,11 +348,11 @@ namespace control_notas_cit.Controllers
                         repoCalendarios.Update(calendario);
                         repoCalendarios.Save();
 
-                        // Sacar esto de la configuracion al crear el calendario
+                        // Sacar esto de la configuracion al crear el calendario        
                         float minutasPorcalendario = 12.0f;
-                        float notaMinutas = 3.0f;
+                        float notaMinutas = (float)calendario.Notas_Minutas_Valor;
                         float asistenciasPorCalendario = 12.0f;
-                        float notaAsistencias = 3.0f;
+                        float notaAsistencias = (float)calendario.Notas_Asistencias_Valor;
                         // Creo las notas
                         foreach (Celula celula in celulas)
                         {
@@ -395,6 +408,7 @@ namespace control_notas_cit.Controllers
         public ActionResult CargarNotasFinales(CargarNotasViewModel model)
         {
             model.Alumnos = GetCurrentProyecto().Celulas.SelectMany(c => c.Alumnos).ToList();
+            var calendario = GetCurrentCalendario();
 
             if (ModelState.IsValid)
             {
@@ -414,15 +428,23 @@ namespace control_notas_cit.Controllers
                         ModelState.AddModelError("", "No se pudo encontrar la nota");
                     }
 
-                    nota.Nota_EvaluacionFinal = data.Nota;
-                    nota.Nota_Final = nota.Nota_Minutas + nota.Nota_Asistencia + nota.Nota_EvaluacionFinal;
 
-                    repoNotas.Update(nota);
-                    repoNotas.Save();
+                    if (data.Nota <= calendario.Notas_Evaluacion_Final_Valor)
+                    {
+                        nota.Nota_EvaluacionFinal = data.Nota;
+                        nota.Nota_Final = nota.Nota_Minutas + nota.Nota_Asistencia + nota.Nota_EvaluacionFinal;
 
+                        repoNotas.Update(nota);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", string.Format("Por favor, todas las notas deben estar comprendidas entre 0 y {0}", calendario.Notas_Evaluacion_Final_Valor));
+                        return View(model);
+                    }
                 }
 
-                var calendario = GetCurrentCalendario();
+                repoNotas.Save();
+
                 calendario.Finalizado = true;
 
                 repoCalendarios.Update(calendario);
@@ -887,11 +909,20 @@ namespace control_notas_cit.Controllers
 
             foreach (Alumno alumno in alumnos)
             {
+                var nota = alumno.Notas.Where(n => n.Calendario.CalendarioID == GetCurrentCalendario().CalendarioID).Single();
+
+                NotaViewModel alnota = new NotaViewModel()
+                {
+                    Nota_Asistencia = ((float)nota.Nota_Asistencia).ToString("0.00"),
+                    Nota_Minutas = ((float)nota.Nota_Minutas).ToString("0.00"),
+                    Nota_EvaluacionFinal = ((float)nota.Nota_EvaluacionFinal).ToString("0.00"),
+                    Nota_Final = (Math.Round((float)nota.Nota_Final).ToString())
+                };
                 AlumnoNotaViewModel a = new AlumnoNotaViewModel()
                 {
                     Nombre = alumno.Nombre,
                     Apellido = alumno.Apellido,
-                    Nota = alumno.Notas.Where(n => n.Calendario.CalendarioID == GetCurrentCalendario().CalendarioID).Single()
+                    Nota = alnota
                 };
 
                 model.Add(a);

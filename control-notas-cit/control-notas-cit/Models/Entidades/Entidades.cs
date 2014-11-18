@@ -40,6 +40,11 @@ namespace control_notas_cit.Models.Entidades
         public bool? IsLastWeek { get; set; }
         public bool? Finalizado { get; set; }
 
+        // Notas
+        public float? Notas_Minutas_Valor { get; set; }
+        public float? Notas_Asistencias_Valor { get; set; }
+        public float? Notas_Evaluacion_Final_Valor { get; set; }
+
         public virtual Proyecto Proyecto { get; set; }
         public virtual List<Semana> Semanas { get; set; }
         public virtual List<Nota> Notas { get; set; }

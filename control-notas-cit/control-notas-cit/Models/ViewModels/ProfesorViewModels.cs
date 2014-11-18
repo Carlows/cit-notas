@@ -26,6 +26,18 @@ namespace control_notas_cit.Models.ViewModels
         public DateTime FechaInicio { get; set; }
         [Required]
         public List<Semana> Semanas { get; set; }
+        [Required]
+        [Display(Name = "Valor minutas")]
+        [Range(minimum: 0, maximum: 10, ErrorMessage="El valor debe estar entre 0 y 10")]
+        public float? Notas_Minutas_Valor { get; set; }
+        [Required]
+        [Display(Name = "Valor asistencias")]
+        [Range(minimum: 0, maximum: 10, ErrorMessage = "El valor debe estar entre 0 y 10")]
+        public float? Notas_Asistencias_Valor { get; set; }
+        [Required]
+        [Display(Name = "Valor evaluacion final")]
+        [Range(minimum: 0, maximum: 10, ErrorMessage = "El valor debe estar entre 0 y 10")]
+        public float? Notas_Presentacion_Valor { get; set; }
     }
 
     public class SemanaViewModel
@@ -151,6 +163,14 @@ namespace control_notas_cit.Models.ViewModels
     {
         public string Nombre { get; set; }
         public string Apellido { get; set; }
-        public Nota Nota { get; set; }
+        public NotaViewModel Nota { get; set; }
+    }
+
+    public class NotaViewModel
+    {
+        public string Nota_Asistencia { get; set; }
+        public string Nota_Minutas { get; set; }
+        public string Nota_EvaluacionFinal { get; set; }
+        public string Nota_Final { get; set; }
     }
 }
