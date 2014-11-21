@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Threading.Tasks;
 using Microsoft.Owin;
+using control_notas_cit.Helpers;
 
 namespace control_notas_cit.Controllers
 {

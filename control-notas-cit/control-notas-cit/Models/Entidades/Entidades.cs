@@ -67,20 +67,6 @@ namespace control_notas_cit.Models.Entidades
         public virtual List<Asistencia> Asistencias { get; set; }
     }
 
-    public class Alumno
-    {
-        [Key]
-        public int AlumnoID { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string Cedula { get; set; }
-        public string Telefono { get; set; }
-        public string Email { get; set; }
-
-        public virtual Celula Celula { get; set; }
-        public virtual List<Nota> Notas { get; set; }
-        public virtual List<Asistencia> Asistencias { get; set; }
-    }
 
     public class Minuta
     {
@@ -127,6 +113,21 @@ namespace control_notas_cit.Models.Entidades
         public virtual List<Asistencia> Asistencias { get; set; }
     }
     
+    public class Alumno
+    {
+        [Key]
+        public int AlumnoID { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string Cedula { get; set; }
+        public string Telefono { get; set; }
+        public string Email { get; set; }
+
+        public virtual Celula Celula { get; set; }
+        public virtual List<Nota> Notas { get; set; }
+        public virtual List<Asistencia> Asistencias { get; set; }
+    }
+
     public class Nota
     {
         [Key]
@@ -137,6 +138,8 @@ namespace control_notas_cit.Models.Entidades
         public float? Nota_Final { get; set; }
 
         public virtual Calendario Calendario { get; set; }
+
+        [Required]
         public virtual Alumno Alumno { get; set; }
     }
     
@@ -153,7 +156,9 @@ namespace control_notas_cit.Models.Entidades
         public bool? Asistio { get; set; }
 
         public virtual Celula Celula { get; set; }
-        public virtual Alumno Alumno { get; set; }
         public virtual Semana Semana { get; set; }
+
+        [Required]
+        public virtual Alumno Alumno { get; set; }
     }
 }

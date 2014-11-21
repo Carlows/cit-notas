@@ -44,10 +44,10 @@ namespace control_notas_cit.Models.ViewModels
     {
         [Required]
         public int SemanaID { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Este campo es obligatorio")]
         [DataType(DataType.MultilineText)]
         public string Actividad { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Este campo es obligatorio")]
         [DataType(DataType.MultilineText)]
         public string Descripcion { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]

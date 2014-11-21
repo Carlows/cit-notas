@@ -94,9 +94,7 @@ http://prntscr.com/5261vo
 
 ###TO-DOs
 
----- Investigar las especificaciones de los proyectos (Que informacion van a almacenar)
-
-- El profesor, ver los alumnos de su proyecto, y cambiarlos de celula.
+- El profesor, puede ver los alumnos de su proyecto, y cambiarlos de celula.
 - Extender la informacion que se muestra al usuario.
 - Las vistas proyectos, celulas, etc, necesitan un mejor diseño.
 
@@ -141,5 +139,7 @@ http://prntscr.com/5261vo
 - Permitir a todos los usuarios cambiar su contraseña.
 - Cuando un proyecto termina el calendario actual, el administrador, verificara el estado actual del calendario del proyecto, y si esta finalizado y no hay uno nuevo, exportara la informacion de los alumnos a csv.
 - Hacer el calendario configurable
+- File uploader, datos a español.
+- Corregir login validacion
 
 ----------------------------------------------------------------------------------
