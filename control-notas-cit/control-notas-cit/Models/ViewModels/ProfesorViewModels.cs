@@ -173,4 +173,16 @@ namespace control_notas_cit.Models.ViewModels
         public string Nota_EvaluacionFinal { get; set; }
         public string Nota_Final { get; set; }
     }
+
+    public class EditarAlumnoViewModel
+    {
+        public SelectList Celulas { get; set; }
+
+        [Required]
+        public int alumnoID { get; set; }
+
+        [Required(ErrorMessage = "Debes elegir una celula")]
+        [Display(Name="Celula")]
+        public string CelulaID { get; set; }
+    }
 }

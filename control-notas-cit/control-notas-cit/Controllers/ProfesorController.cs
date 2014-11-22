@@ -932,6 +932,74 @@ namespace control_notas_cit.Controllers
             return View(model);
         }
 
+        //
+        // GET: /Profesor/ListaAlumnos/
+        public ActionResult ListaAlumnos()
+        {
+            List<Alumno> model = GetCurrentProyecto().Celulas.SelectMany(c => c.Alumnos).ToList();
+
+            return View(model);
+        }
+
+        //
+        // GET: /Profesor/EditarAlumno/2
+        public ActionResult EditarAlumno(int? id)
+        {
+            if(id == null)
+            {
+                TempData["msg"] = "No se envio ningún id";
+                return RedirectToAction("ListaAlumnos");
+            }
+
+            var alumno = GetCurrentProyecto().Celulas.SelectMany(c => c.Alumnos).Where(a => a.AlumnoID == id).SingleOrDefault();
+
+            if(alumno == null)
+            {
+                TempData["msg"] = "No se encontro el alumno";
+                return RedirectToAction("ListaAlumnos");
+            }
+
+            return View(new EditarAlumnoViewModel()
+            {
+                Celulas = new SelectList(GetCelulasList(), "Value", "Text", alumno.Celula.CelulaID.ToString()),
+                alumnoID = alumno.AlumnoID
+            });
+        }
+
+        //
+        // POST: /Profesor/EditarAlumno/2
+        [HttpPost]
+        public ActionResult EditarAlumno(EditarAlumnoViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var alumno = repoAlumnos.SelectById(model.alumnoID);
+
+                if(alumno == null)
+                {
+                    TempData["msg"] = "No se encontro el alumno";
+                    return RedirectToAction("ListaAlumnos");
+                }
+
+                var celula = GetCurrentProyecto().Celulas.Where(c => c.CelulaID == int.Parse(model.CelulaID)).SingleOrDefault();
+
+                if (celula == null)
+                {
+                    TempData["msg"] = "No se encontro la celula";
+                    return RedirectToAction("ListaAlumnos");
+                }
+
+                alumno.Celula = celula;
+                repoAlumnos.Update(alumno);
+                repoAlumnos.Save();
+
+                TempData["msg"] = "El alumno fue guardado correctamente.";
+                return RedirectToAction("ListaAlumnos");
+            }
+
+            return View(model.Celulas = new SelectList(GetCelulasList(), "Value", "Text"));
+        }
+
         // Obtiene el usuario logueado actualmente
         private ApplicationUser GetCurrentUser()
         {
